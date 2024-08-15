@@ -1,0 +1,12 @@
+directories:
+  output: dist_electron
+  buildResources: build
+appId: com.cool.uid
+productName: xls vite
+files:
+  - filter:
+      - dist/**/*
+      - dist_electron/**/*
+mac:
+  target: dmg
+electronVersion: 31.4.0

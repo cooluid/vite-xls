@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "CommonJS",
+		"esModuleInterop": true,
+		"rootDir": "./electron",
+		"outDir": "dist_electron",
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"sourceMap": true,
+		"moduleResolution": "Node"
+	},
+	"include": ["electron/index.ts"]
+}

@@ -1,0 +1,43 @@
+{
+	"name": "vite-xls",
+	"private": true,
+	"version": "0.0.0",
+	"main": "dist_electron/index.js",
+	"scripts": {
+		"dev": "vite",
+		"build": "vue-tsc -b && vite build && yarn build:main",
+		"preview": "vite preview",
+		"start": "concurrently -k \"yarn dev\" \"cross-env IS_DEV=true electron .\"",
+		"build:main": "tsc -b tsconfig.electron.json",
+		"dist": "yarn build && electron-builder --mac --dir"
+	},
+	"build": {
+		"appId": "com.cool.uid",
+		"productName": "xls vite",
+		"directories": {
+			"output": "dist_electron"
+		},
+		"files": [
+			"dist/**/*",
+			"dist_electron/**/*"
+		],
+		"mac": {
+			"target": "dmg"
+		}
+	},
+	"dependencies": {
+		"vue": "^3.4.35"
+	},
+	"devDependencies": {
+		"@electron/packager": "electron/packager",
+		"@vitejs/plugin-vue": "^5.1.2",
+		"concurrently": "^8.2.2",
+		"cross-env": "^7.0.3",
+		"electron": "^31.4.0",
+		"electron-browser-storage": "^1.0.7",
+		"electron-builder": "^24.13.3",
+		"typescript": "^5.5.3",
+		"vite": "^5.4.0",
+		"vue-tsc": "^2.0.29"
+	}
+}
