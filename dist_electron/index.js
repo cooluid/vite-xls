@@ -44,7 +44,7 @@ function createWindow() {
                 preload: path_1.default.join(__dirname, './preload.js')
             }
         });
-        win.loadFile(`file://${path_1.default.join(__dirname, '../dist/index.html')}`);
+        win.loadURL(`file://${path_1.default.resolve(__dirname, '../')}/dist/index.html`);
     }
 }
 electron_1.app.whenReady().then(() => {

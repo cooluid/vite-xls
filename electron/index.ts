@@ -46,7 +46,7 @@ function createWindow() {
             }
         });
 
-        win.loadFile(`file://${path.join(__dirname, '../dist/index.html')}`);
+        win.loadURL(`file://${path.resolve(__dirname,'../')}/dist/index.html`);
     }
 }
 
