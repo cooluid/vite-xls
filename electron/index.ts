@@ -13,7 +13,8 @@ function createWindow() {
                 contextIsolation: false,
                 nodeIntegration: true,
                 webSecurity: false,
-                allowRunningInsecureContent: true
+                allowRunningInsecureContent: true,
+                preload: path.join(__dirname, 'preload.js')
             }
         });
 
@@ -27,7 +28,8 @@ function createWindow() {
                 contextIsolation: true,
                 nodeIntegration: false,
                 webSecurity: true,
-                allowRunningInsecureContent: false
+                allowRunningInsecureContent: false,
+                preload: path.join(__dirname, 'preload.js')
             }
         });
     }

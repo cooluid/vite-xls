@@ -10,5 +10,5 @@
 		"sourceMap": true,
 		"moduleResolution": "Node"
 	},
-	"include": ["electron/index.ts"]
+	"include": ["electron/index.ts", "electron/preload.ts"]
 }

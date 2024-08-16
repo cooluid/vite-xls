@@ -24,7 +24,8 @@ const pathValue = ref("");
 
 const btnClick = () => {
 	if (fileInput.value) {
-		fileInput.value.click();
+		// fileInput.value.click();
+		// console.log(window.electronAPI);
 	}
 };
 
