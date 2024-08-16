@@ -1,17 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
-export interface ElectronAPI {
-    send: (channel: string, data: any) => void;
-    receive: (channel: string, func: (...args: any[]) => void) => void;
-    receiveOnce: (channel: string, func: (...args: any[]) => void) => void;
-}
-
-declare global {
-    interface Window {
-        electronAPI: ElectronAPI;
-    }
-}
-
 contextBridge.exposeInMainWorld('electronAPI', {
     send: (channel: string, data: any) => {
         const validChannels = ['toMain'];
@@ -39,4 +27,4 @@ contextBridge.exposeInMainWorld('electronAPI', {
             console.log(`收到主进程一次性信息`);
         }
     }
-} as ElectronAPI)
+});

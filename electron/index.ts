@@ -3,6 +3,7 @@ import path from 'path'
 
 function createWindow() {
     const isDev = process.env.IS_DEV === "true";
+    console.log("isDEV", isDev);
     let win: BrowserWindow | null = null;
 
     if (isDev) {
@@ -10,11 +11,10 @@ function createWindow() {
             width: 800,
             height: 600,
             webPreferences: {
-                contextIsolation: false,
-                nodeIntegration: true,
-                webSecurity: false,
+                contextIsolation: true,
+                nodeIntegration: false,
                 allowRunningInsecureContent: true,
-                preload: path.join(__dirname, 'preload.js')
+                preload: path.join(__dirname, './preload.js')
             }
         });
 
@@ -27,9 +27,8 @@ function createWindow() {
             webPreferences: {
                 contextIsolation: true,
                 nodeIntegration: false,
-                webSecurity: true,
                 allowRunningInsecureContent: false,
-                preload: path.join(__dirname, 'preload.js')
+                preload: path.join(__dirname, './preload.js')
             }
         });
     }

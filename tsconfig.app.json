@@ -8,6 +8,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"rootDir": "./src",
 		"outDir": "dist",
+		"esModuleInterop": true,
+		"baseUrl": ".",
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
@@ -23,5 +25,5 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true
 	},
-	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/global.d.ts"]
 }

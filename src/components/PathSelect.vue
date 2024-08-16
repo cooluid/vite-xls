@@ -25,7 +25,7 @@ const pathValue = ref("");
 const btnClick = () => {
 	if (fileInput.value) {
 		// fileInput.value.click();
-		// console.log(window.electronAPI);
+		window.electronAPI.send("toMain", { data: "hello" });
 	}
 };
 

@@ -7,17 +7,17 @@ const electron_1 = require("electron");
 const path_1 = __importDefault(require("path"));
 function createWindow() {
     const isDev = process.env.IS_DEV === "true";
+    console.log("isDEV", isDev);
     let win = null;
     if (isDev) {
         win = new electron_1.BrowserWindow({
             width: 800,
             height: 600,
             webPreferences: {
-                contextIsolation: false,
-                nodeIntegration: true,
-                webSecurity: false,
+                contextIsolation: true,
+                nodeIntegration: false,
                 allowRunningInsecureContent: true,
-                preload: path_1.default.join(__dirname, 'preload.js')
+                preload: path_1.default.join(__dirname, './preload.js')
             }
         });
         win.webContents.openDevTools();
@@ -29,9 +29,8 @@ function createWindow() {
             webPreferences: {
                 contextIsolation: true,
                 nodeIntegration: false,
-                webSecurity: true,
                 allowRunningInsecureContent: false,
-                preload: path_1.default.join(__dirname, 'preload.js')
+                preload: path_1.default.join(__dirname, './preload.js')
             }
         });
     }
