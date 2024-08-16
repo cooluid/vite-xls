@@ -1,30 +1,28 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    send: (channel: string, data: any) => {
-        const validChannels = ['toMain'];
+    invoke: async (channel: string, ...args: any[]) => {
+        console.log(`获取异步操作`, channel, ...args);
+        return await ipcRenderer.invoke(channel, ...args);
+    },
 
-        if (validChannels.includes(channel)) {
-            ipcRenderer.send(channel, data);
-            console.log(`发送给主进程`, data);
-        }
+    send: (channel: string, data: any) => {
+        ipcRenderer.send(channel, data);
+        console.log(`发送消息给主进程`, channel, data);
     },
 
     receive: (channel: string, func: (...args: any[]) => void) => {
-        const validChannels = ["fromMain"];
+        ipcRenderer.on(channel, (event, ...args: any[]) => {
+            func?.(...args);
+            console.log(`收到主进程消息`);
+        });
 
-        if (validChannels.includes(channel)) {
-            ipcRenderer.on(channel, (event, ...args: any[]) => func(...args));
-            console.log(`收到主进程信息`);
-        }
     },
 
     receiveOnce: (channel: string, func: (...args: any[]) => void) => {
-        const validChannels = ["fromMain"];
-
-        if (validChannels.includes(channel)) {
-            ipcRenderer.once(channel, (event, ...args: any[]) => func(...args));
-            console.log(`收到主进程一次性信息`);
-        }
+        ipcRenderer.once(channel, (event, ...args: any[]) => {
+            func?.(...args);
+            console.log(`收到主进程一次性消息`);
+        });
     }
 });

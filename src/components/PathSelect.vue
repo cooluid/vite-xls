@@ -8,30 +8,21 @@
 			placeholder="请选择表格配置路径"
 		/>
 		<button @click="btnClick">选择</button>
-		<input
-			type="file"
-			ref="fileInput"
-			style="display: none"
-			@change="valueChange"
-		/>
 	</div>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
 
-const fileInput = ref<HTMLInputElement | null>(null);
-const pathValue = ref("");
+let pathValue = ref("");
 
-const btnClick = () => {
-	if (fileInput.value) {
-		// fileInput.value.click();
-		window.electronAPI.send("toMain", { data: "hello" });
-	}
-};
+const btnClick = async () => {
+	console.log(`请求选择文件路径`);
+	let template = await window.electronAPI.invoke("dialog:openDirectory", {
+		data: "hello",
+	});
 
-const valueChange = () => {
-	console.log(fileInput.value?.files);
-	pathValue.value = fileInput.value?.files?.[0].name + "";
+	pathValue.value = template[0];
+	console.log(`pathValue`, pathValue);
 };
 </script>
 <style scoped></style>

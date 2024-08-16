@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
+const main_1 = require("electron/main");
 const path_1 = __importDefault(require("path"));
 function createWindow() {
     const isDev = process.env.IS_DEV === "true";
     console.log("isDEV", isDev);
-    let win = null;
+    let win;
     if (isDev) {
         win = new electron_1.BrowserWindow({
             width: 800,
@@ -20,7 +21,17 @@ function createWindow() {
                 preload: path_1.default.join(__dirname, './preload.js')
             }
         });
+        electron_1.ipcMain.removeHandler('dialog:openDirectory');
+        electron_1.ipcMain.handle("dialog:openDirectory", async (event, ...args) => {
+            console.log(`收到主进程异步操作消息`);
+            console.log(`win`, win);
+            const result = await main_1.dialog.showOpenDialog(win, { properties: ['openDirectory'] });
+            console.log(`获取异步操作结果：`, result);
+            return result.filePaths;
+        });
+        win.webContents.closeDevTools();
         win.webContents.openDevTools();
+        win.loadURL("http://localhost:5173");
     }
     else {
         win = new electron_1.BrowserWindow({
@@ -33,8 +44,8 @@ function createWindow() {
                 preload: path_1.default.join(__dirname, './preload.js')
             }
         });
+        win.loadFile(`file://${path_1.default.join(__dirname, '../dist/index.html')}`);
     }
-    win.loadURL(isDev ? 'http://localhost:5173' : `file://${path_1.default.join(__dirname, '../dist/index.html')}`);
 }
 electron_1.app.whenReady().then(() => {
     // 创建windows应用
@@ -51,6 +62,7 @@ electron_1.app.whenReady().then(() => {
 });
 electron_1.app.on('window-all-closed', () => {
     if (process.platform !== "darwin") {
+        console.log(`退出APP`);
         electron_1.app.quit();
     }
 });

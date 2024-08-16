@@ -1,10 +1,12 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
+import { dialog } from 'electron/main';
 import path from 'path'
 
 function createWindow() {
     const isDev = process.env.IS_DEV === "true";
     console.log("isDEV", isDev);
-    let win: BrowserWindow | null = null;
+
+    let win: BrowserWindow | null;
 
     if (isDev) {
         win = new BrowserWindow({
@@ -18,7 +20,19 @@ function createWindow() {
             }
         });
 
+        ipcMain.removeHandler('dialog:openDirectory');
+        ipcMain.handle("dialog:openDirectory", async (event, ...args: any) => {
+            console.log(`收到主进程异步操作消息`);
+            console.log(`win`, win);
+            const result = await dialog.showOpenDialog(win as BrowserWindow, { properties: ['openDirectory'] });
+            console.log(`获取异步操作结果：`, result);
+            return result.filePaths;
+        });
+
+        win.webContents.closeDevTools();
         win.webContents.openDevTools();
+
+        win.loadURL("http://localhost:5173");
 
     } else {
         win = new BrowserWindow({
@@ -31,9 +45,9 @@ function createWindow() {
                 preload: path.join(__dirname, './preload.js')
             }
         });
-    }
 
-    win.loadURL(isDev ? 'http://localhost:5173' : `file://${path.join(__dirname, '../dist/index.html')}`);
+        win.loadFile(`file://${path.join(__dirname, '../dist/index.html')}`);
+    }
 }
 
 app.whenReady().then(() => {
@@ -52,6 +66,7 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== "darwin") {
+        console.log(`退出APP`);
         app.quit();
     }
 })
