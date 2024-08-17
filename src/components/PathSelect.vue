@@ -16,13 +16,11 @@ import { ref } from "vue";
 let pathValue = ref("");
 
 const btnClick = async () => {
-	console.log(`请求选择文件路径`);
 	let template = await window.electronAPI.invoke("dialog:openDirectory", {
 		data: "hello",
 	});
 
 	pathValue.value = template[0];
-	console.log(`pathValue`, pathValue);
 };
 </script>
 <style scoped></style>

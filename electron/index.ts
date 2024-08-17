@@ -21,7 +21,7 @@ function createWindow() {
 			}
 		});
 
-		win.loadURL("http://localhost:5173");
+		win.loadURL("http://localhost:5173").then();
 
 	} else {
 		win = new BrowserWindow({
@@ -35,7 +35,7 @@ function createWindow() {
 			}
 		});
 
-		win.loadURL(`file://${path.resolve(__dirname, '../')}/dist/index.html`);
+		win.loadURL(`file://${path.resolve(__dirname, '../')}/dist/index.html`).then();
 	}
 
 	win.webContents.openDevTools();
@@ -43,6 +43,13 @@ function createWindow() {
 	ipcMain.handle("dialog:openDirectory", async (evt: IpcMainInvokeEvent, ...args: any[]) => {
 		console.log(`收到渲染进程发来的消息dialog:openDirectory`, evt, ...args);
 		const result = await dialog.showOpenDialog(win as BrowserWindow, {properties: ['openDirectory']});
+
+		return result.filePaths;
+	});
+
+	ipcMain.handle("dialog:openFile", async (evt: IpcMainInvokeEvent, ...args: any[]) => {
+		console.log(`收到渲染进程发来的消息dialog:openFile`, evt, ...args);
+		const result = await dialog.showOpenDialog(win as BrowserWindow, {properties: ['openFile']});
 
 		return result.filePaths;
 	});
