@@ -7,7 +7,7 @@
 		"dev": "vite",
 		"build": "vue-tsc -b && vite build && yarn build:main",
 		"preview": "vite preview",
-		"start": "concurrently -k \"yarn dev\" \"cross-env IS_DEV=true electron .\"",
+		"start": "concurrently -k \"yarn dev\" \"wait-on http://localhost:5173 && cross-env IS_DEV=true electron .\"",
 		"build:main": "tsc -b tsconfig.electron.json",
 		"dist": "yarn build && electron-builder --mac --dir"
 	},
@@ -36,8 +36,10 @@
 		"electron": "^31.4.0",
 		"electron-browser-storage": "^1.0.7",
 		"electron-builder": "^24.13.3",
+		"pinia": "^2.2.2",
 		"typescript": "^5.5.3",
 		"vite": "^5.4.0",
-		"vue-tsc": "^2.0.29"
+		"vue-tsc": "^2.0.29",
+		"wait-on": "^7.2.0"
 	}
 }

@@ -1,6 +1,7 @@
 import {app, BrowserWindow, ipcMain} from 'electron'
 import {dialog} from 'electron/main';
 import path from 'path'
+import * as fs from "node:fs";
 import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
 
 function createWindow() {
@@ -13,6 +14,7 @@ function createWindow() {
 		win = new BrowserWindow({
 			width: 800,
 			height: 800,
+			fullscreen: true,
 			webPreferences: {
 				contextIsolation: true,
 				nodeIntegration: false,
@@ -53,6 +55,17 @@ function createWindow() {
 
 		return result.filePaths;
 	});
+
+	ipcMain.handle("get-files-in-directory", async (evt: IpcMainInvokeEvent, dirPath: string) => {
+		console.log(`收到渲染进程发来的消息get-files-in-directory`, evt, dirPath);
+		try {
+			return fs.readdirSync(dirPath);
+
+		} catch (e) {
+			console.error(e);
+			return [];
+		}
+	})
 }
 
 app.whenReady().then(() => {
