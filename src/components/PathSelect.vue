@@ -17,7 +17,7 @@ import XlsFileItem from "./XlsFileItem.vue";
 import {useFileStore} from "../stores/FileStore.ts";
 
 let pathValue = ref("");
-let xlsFileNames = ref([] as String[]);
+let xlsFileNames = ref([] as string[]);
 
 const fileStore = useFileStore();
 const filesNames = fileStore.getNames();

@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-defineProps({
-	name: String,
-	index: Number
-});
+interface Props {
+	index: number;
+	name: string;
+}
+
+const props = defineProps<Props>();
 
 </script>
 
 <template>
 	<div>
-		{{ index }}. {{ name }}
+		{{ props.index }}. {{ props.name }}
 	</div>
 </template>
 
