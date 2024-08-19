@@ -38,7 +38,6 @@ function createWindow() {
         win = new electron_1.BrowserWindow({
             width: 800,
             height: 800,
-            fullscreen: true,
             webPreferences: {
                 contextIsolation: true,
                 nodeIntegration: false,

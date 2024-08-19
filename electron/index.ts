@@ -12,9 +12,8 @@ function createWindow() {
 
 	if (isDev) {
 		win = new BrowserWindow({
-			width: 800,
+			width: 1000,
 			height: 800,
-			fullscreen: true,
 			webPreferences: {
 				contextIsolation: true,
 				nodeIntegration: false,

@@ -1,21 +1,8 @@
 <script lang="ts" setup>
 interface Props {
-	index: 0;
+	index: number;
 	name: string;
 }
-
-defineProps({
-	id: Number,
-	ext: {
-		type: Object,
-		required: true,
-		default: {"num": 1},
-	}
-})
-
-defineProps({
-	type: [String]
-});
 
 const props = defineProps<Props>();
 
