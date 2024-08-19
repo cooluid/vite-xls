@@ -1,5 +1,4 @@
-import {app, BrowserWindow, ipcMain} from 'electron'
-import {dialog} from 'electron/main';
+import {app, BrowserWindow, ipcMain, dialog} from 'electron'
 import path from 'path'
 import * as fs from "node:fs";
 import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;

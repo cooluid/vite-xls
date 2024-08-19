@@ -27,7 +27,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-const main_1 = require("electron/main");
 const path_1 = __importDefault(require("path"));
 const fs = __importStar(require("node:fs"));
 function createWindow() {
@@ -36,7 +35,7 @@ function createWindow() {
     let win;
     if (isDev) {
         win = new electron_1.BrowserWindow({
-            width: 800,
+            width: 1000,
             height: 800,
             webPreferences: {
                 contextIsolation: true,
@@ -63,12 +62,12 @@ function createWindow() {
     win.webContents.openDevTools();
     electron_1.ipcMain.handle("dialog:openDirectory", async (evt, ...args) => {
         console.log(`收到渲染进程发来的消息dialog:openDirectory`, evt, ...args);
-        const result = await main_1.dialog.showOpenDialog(win, { properties: ['openDirectory'] });
+        const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openDirectory'] });
         return result.filePaths;
     });
     electron_1.ipcMain.handle("dialog:openFile", async (evt, ...args) => {
         console.log(`收到渲染进程发来的消息dialog:openFile`, evt, ...args);
-        const result = await main_1.dialog.showOpenDialog(win, { properties: ['openFile'] });
+        const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openFile'] });
         return result.filePaths;
     });
     electron_1.ipcMain.handle("get-files-in-directory", async (evt, dirPath) => {

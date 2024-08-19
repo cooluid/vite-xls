@@ -1,13 +1,15 @@
 <template>
 	<div>
-		<input
+		<el-input
 				type="text"
 				v-model="pathValue"
+				:prefix-icon="Search"
 				@click="btnClick"
+				style="width: 480px"
 				readonly
 				placeholder="请选择表格配置路径"
 		/>
-		<button @click="btnClick">选择</button>
+		<el-button type="primary" @click="btnClick">选择路径...</el-button>
 		<XlsFileItem v-for="(name, index) in xlsFileNames" :key="index" :index="index" :name="name"/>
 	</div>
 </template>
@@ -15,6 +17,7 @@
 import {ref} from "vue";
 import XlsFileItem from "./XlsFileItem.vue";
 import {useFileStore} from "../stores/FileStore.ts";
+import {Search} from "@element-plus/icons-vue"
 
 let pathValue = ref("");
 let xlsFileNames = ref([] as string[]);
