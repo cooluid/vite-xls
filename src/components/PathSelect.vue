@@ -1,16 +1,18 @@
 <template>
 	<div>
-		<el-input
-				type="text"
-				v-model="pathValue"
-				:prefix-icon="Search"
-				@click="btnClick"
-				style="width: 480px"
-				readonly
-				placeholder="请选择表格配置路径"
-		/>
-		<el-button type="primary" @click="btnClick">选择路径...</el-button>
-		<XlsFileItem v-for="(name, index) in xlsFileNames" :key="index" :index="index" :name="name"/>
+		<el-card title="导表工具" style="width: 600px">
+					<el-input
+							type="text"
+							v-model="pathValue"
+							:prefix-icon="Search"
+							@click="btnClick"
+							style="width: 480px"
+							readonly
+							placeholder="请选择表格配置路径"
+					/>
+			<el-button type="primary" @click="btnClick">选择路径...</el-button>
+			<XlsFileItem v-for="(name, index) in xlsFileNames" :key="index" :index="index" :name="name"/>
+		</el-card>
 	</div>
 </template>
 <script setup lang="ts">
