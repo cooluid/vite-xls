@@ -7,7 +7,7 @@
 			<el-col :span="12" class="col">
 				<div class="m-left-section">
 					<div class="m-path-select">
-						<el-input @click="btnClick" v-model="pathValue" readonly placeholder="请选择表格路径"></el-input>
+						<el-input v-model="importPathValue" placeholder="请选择表格路径" readonly @click="btnClick"></el-input>
 					</div>
 					<div class="m-button">
 						<el-button type="primary" @click="btnClick">选择</el-button>
@@ -51,20 +51,13 @@ import {ref} from "vue";
 import XlsFileItem from "./XlsFileItem.vue";
 import {useFileStore} from "../stores/FileStore.ts";
 
-let pathValue = ref("");
-let xlsFileNames = ref([] as string[]);
-
 const fileStore = useFileStore();
-const filesNames = fileStore.getNames();
+let importPathValue = ref(fileStore.getImportPath() || "");
+const exportPath = ref("");
+let xlsFileNames = ref([] as string[]);
 
 const exportJson = ref(0);
 const exportAmf = ref(0);
-const exportPath = ref("");
-const theme = ref("");
-
-if (filesNames?.length > 0) {
-	xlsFileNames = JSON.parse(filesNames);
-}
 
 const exportPathClick = async () => {
 	const selectPath = await window.electronAPI.invoke("dialog:openDirectory", {
@@ -73,23 +66,22 @@ const exportPathClick = async () => {
 
 	if (selectPath?.length > 0) {
 		exportPath.value = selectPath[0];
+		fileStore.setExportPath(exportPath.value);
 	}
 }
 
 const btnClick = async () => {
 	fileStore.clearAllNames();
-	let selectPath = await window.electronAPI.invoke("dialog:openDirectory", {
+
+	let importPath = await window.electronAPI.invoke("dialog:openDirectory", {
 		data: "hello",
 	});
 
-	if (selectPath?.length > 0) {
-		const fileNames = await window.electronAPI.invoke("get-files-in-directory", selectPath[0]);
+	if (importPath?.length > 0) {
+		const fileNames = await window.electronAPI.invoke("get-files-in-directory", importPath[0]);
 		xlsFileNames = fileNames;
-
-		fileStore.setNames(JSON.stringify(fileNames));
-		console.log("fileNames", fileNames);
-
-		pathValue.value = selectPath[0];
+		fileStore.setFileList(JSON.stringify(fileNames));
+		importPathValue.value = importPath[0];
 	}
 };
 </script>

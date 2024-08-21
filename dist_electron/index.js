@@ -86,7 +86,6 @@ electron_1.app.whenReady().then(() => {
     createWindow();
     // 延迟3s 等待应用激活
     setTimeout(() => {
-        console.log('已经过了3s了');
         electron_1.app.on('activate', function () {
             // 如果应用激活后,窗口依然为0,则重新创建windows应用
             if (electron_1.BrowserWindow.getAllWindows().length === 0)

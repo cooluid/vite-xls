@@ -21,7 +21,7 @@ electron_1.contextBridge.exposeInMainWorld('electronAPI', {
         // 监听指定通道的消息，每当收到消息时，执行回调函数
         electron_1.ipcRenderer.on(channel, (event, ...args) => {
             func?.(...args);
-            console.log(`收到主进程消息`);
+            console.log(`收到主进程消息`, ...args);
         });
     },
     // 定义一个接收一次性消息的方法，用于监听主进程的一次性数据发送
@@ -29,7 +29,7 @@ electron_1.contextBridge.exposeInMainWorld('electronAPI', {
         // 监听指定通道的一次性消息，收到后执行回调函数
         electron_1.ipcRenderer.once(channel, (event, ...args) => {
             func?.(...args);
-            console.log(`收到主进程一次性消息`);
+            console.log(`收到主进程一次性消息`, ...args);
         });
     }
 });

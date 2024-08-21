@@ -6,7 +6,5 @@
 	],
 	"compilerOptions": {
 		"forceConsistentCasingInFileNames": true,
-		"strict": true,
-		"types": ["vue"]
 	}
 }
