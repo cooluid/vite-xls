@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-interface Props {
-	index: number;
-	name: string;
-}
-
-const props = defineProps<Props>();
-
 </script>
 
 <template>
 	<div>
-		{{ props.index }}. {{ props.name }}
+		<div class="m-name-text">
+			<slot></slot>
+		</div>
+
 	</div>
 </template>
 
 <style scoped>
-
+.m-name-text {
+	font-size: 16px;
+	text-align: left;
+	background-color: #79bbff;
+}
 </style>

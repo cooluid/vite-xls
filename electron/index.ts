@@ -25,7 +25,7 @@ function createWindow() {
 
 	} else {
 		win = new BrowserWindow({
-			width: 800,
+			width: 1000,
 			height: 800,
 			webPreferences: {
 				contextIsolation: true,
@@ -38,7 +38,7 @@ function createWindow() {
 		win.loadURL(`file://${path.resolve(__dirname, '../')}/dist/index.html`).then();
 	}
 
-	win.webContents.openDevTools();
+	// win.webContents.openDevTools();
 
 	ipcMain.handle("dialog:openDirectory", async (evt: IpcMainInvokeEvent, ...args: any[]) => {
 		console.log(`收到渲染进程发来的消息dialog:openDirectory`, evt, ...args);

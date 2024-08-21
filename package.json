@@ -30,7 +30,7 @@
 		"vue": "^3.4.35"
 	},
 	"devDependencies": {
-		"@electron/packager": "electron/packager",
+		"@electron/packager": "^18.3.4",
 		"@vitejs/plugin-vue": "^5.1.2",
 		"concurrently": "^8.2.2",
 		"cross-env": "^7.0.3",

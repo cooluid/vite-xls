@@ -18,7 +18,8 @@
 		// 生成源映射文件，便于调试编译后的代码
 		"sourceMap": true,
 		// 模块解析策略为Node.js的，默认行为，兼容性和性能表现良好
-		"moduleResolution": "Node"
+		"moduleResolution": "Node",
+		"types": ["node"]
 	},
 	// 指定需要编译的文件列表
 	"include": ["electron/index.ts", "electron/preload.ts"]

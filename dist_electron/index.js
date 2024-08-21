@@ -48,7 +48,7 @@ function createWindow() {
     }
     else {
         win = new electron_1.BrowserWindow({
-            width: 800,
+            width: 1000,
             height: 800,
             webPreferences: {
                 contextIsolation: true,
@@ -59,7 +59,7 @@ function createWindow() {
         });
         win.loadURL(`file://${path_1.default.resolve(__dirname, '../')}/dist/index.html`).then();
     }
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     electron_1.ipcMain.handle("dialog:openDirectory", async (evt, ...args) => {
         console.log(`收到渲染进程发来的消息dialog:openDirectory`, evt, ...args);
         const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openDirectory'] });
