@@ -3,10 +3,15 @@ import PathSelect from "./components/PathSelect.vue";
 </script>
 
 <template>
-	<div>
+	<div id="app-container">
+		<PathSelect></PathSelect>
 	</div>
-	<PathSelect></PathSelect>
 </template>
 
 <style scoped>
+#app-container {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
 </style>

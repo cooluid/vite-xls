@@ -13,6 +13,11 @@ function createWindow() {
 		win = new BrowserWindow({
 			width: 1000,
 			height: 800,
+			resizable: false,
+			fullscreenable: false,
+			maximizable: false,
+			frame: false,
+			movable: true,
 			webPreferences: {
 				contextIsolation: true,
 				nodeIntegration: false,
@@ -27,6 +32,11 @@ function createWindow() {
 		win = new BrowserWindow({
 			width: 1000,
 			height: 800,
+			resizable: false,
+			fullscreenable: false,
+			maximizable: false,
+			frame: false,
+			movable: true,
 			webPreferences: {
 				contextIsolation: true,
 				nodeIntegration: false,

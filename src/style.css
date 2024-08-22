@@ -24,11 +24,25 @@ a:hover {
 
 body {
   margin: 0;
+  padding: 0;
+  background-color: #337ecc;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
+  overflow: hidden;
 }
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  background-color: #337ecc; /* 与 body 一致 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
 
 h1 {
   font-size: 3.2em;
@@ -56,13 +70,6 @@ button:focus-visible {
 
 .card {
   padding: 2em;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
 @media (prefers-color-scheme: light) {

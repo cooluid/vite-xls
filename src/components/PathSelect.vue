@@ -1,18 +1,19 @@
 <template>
-	<div class="m-title">
-		<div class="m-title-text">表格转换工具</div>
-	</div>
 	<div class="container">
+		<div class="m-title">
+			<div>表格转换工具</div>
+		</div>
 		<el-row>
-			<el-col :span="12" class="col">
-				<div class="m-left-section">
-					<div class="m-path-select">
+			<el-col :span="12">
+				<div class="left-container">
+					<div class="m-path-select1">
 						<el-input v-model="importPathValue" placeholder="请选择表格路径" readonly @click="btnClick"></el-input>
 					</div>
 					<div class="m-button">
 						<el-button type="primary" @click="btnClick">选择</el-button>
 					</div>
 				</div>
+
 				<div class="m-list">
 					<XlsFileItem v-for="(name, index) in xlsFileNames" :key="index">
 						<div>{{ name }}</div>
@@ -20,28 +21,25 @@
 				</div>
 			</el-col>
 
-			<el-col :span="12" class="col">
-				<div class="m-right-section">
-					<el-card class="card-container">
-						<div slot="header">导出设置</div>
-						<div class="m-path-select">
-							<el-input v-model="exportPath" placeholder="导出路径"></el-input>
-							<el-button class="m-button" type="primary" @click="exportPathClick">选择</el-button>
-						</div>
+			<el-col :span="12" class="right-col">
+				<el-card class="card-container">
+					<div slot="header">导出设置</div>
+					<div class="m-path-select2">
+						<el-input v-model="exportPath" placeholder="导出路径"></el-input>
+						<el-button class="m-button" type="primary" @click="exportPathClick">选择</el-button>
+					</div>
 
-						<div class="set-info">
-							<div class="m-switch">
-								<el-switch class="m-switch-item" v-model="exportJson" active-text="导出JSON"></el-switch>
-								<el-switch class="m-switch-item" v-model="exportAmf" active-text="导出AMF"></el-switch>
-							</div>
-							<div class="grp-button">
-								<el-button class="summit-button" type="primary">导出选中</el-button>
-								<el-button class="summit-button" type="danger">导出全部</el-button>
-							</div>
+					<div class="set-info">
+						<div class="m-switch">
+							<el-switch class="m-switch-item" v-model="exportJson" active-text="导出JSON"></el-switch>
+							<el-switch class="m-switch-item" v-model="exportAmf" active-text="导出AMF"></el-switch>
 						</div>
-
-					</el-card>
-				</div>
+						<div class="grp-button">
+							<el-button class="summit-button" type="primary">导出选中</el-button>
+							<el-button class="summit-button" type="danger">导出全部</el-button>
+						</div>
+					</div>
+				</el-card>
 			</el-col>
 		</el-row>
 	</div>
@@ -87,55 +85,47 @@ const btnClick = async () => {
 </script>
 <style scoped>
 .container {
-	width: 800px;
-	height: 600px;
-	border-radius: 3px;
-	display: flex;
-	justify-content: space-between;
-}
-
-.col {
-	background-color: #dcdfe6;
-	height: 450px;
-}
-
-.m-left-section {
-	display: flex;
-	flex-direction: row;
-	width: 400px;
-	margin: 5px;
-}
-
-.m-right-section {
-	width: 400px;
-	height: 600px;
-}
-
-.m-button {
-	width: 20%;
-}
-
-.m-list {
-	width: 400px;
-	height: 400px;
-}
-
-.m-list-item {
-	//margin-left: 5px;
 	width: 100%;
-	//display: inline-block;
-	//border-bottom: 1px dashed #c0c4cc;
+	height: 100%;
 }
 
 .m-title {
-	border-radius: 10px 10px 0 0;
-	background-color: #409eff;
-	width: 800px;
 	height: 50px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	color: white;
+}
+
+.left-container {
+	height: 100%;
+	display: flex;
+}
+
+.el-row {
+	width: 100%;
+	height: calc(100% - 50px); /* 减去标题的高度 */
+}
+
+.el-col {
+	display: flex;
+	//flex-direction: row;
+	align-items: start;
+	width: 100%;
+	height: 100%;
+	background-color: #79bbff;
+}
+
+.right-col{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	background-color: #79bbff;
+}
+
+.m-list {
 }
 
 .m-switch {
@@ -151,17 +141,18 @@ const btnClick = async () => {
 	width: 150px;
 }
 
-.card-container {
-	height: 440px;
-}
-
 .set-info {
-	margin-top: 200px;
+	margin-top: auto;
 }
 
-.m-path-select {
-	width: 370px;
-	display: flex;
-	justify-content: center;
+.m-button {
+
 }
+
+.m-path-select1 {
+	width: 100%;
+	padding-right: 3px;
+}
+
+
 </style>
