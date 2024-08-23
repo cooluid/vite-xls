@@ -7,18 +7,25 @@
 			<el-col :span="12" class="left-col">
 				<div class="left-path-container">
 					<div class="m-path-select1">
-						<el-input v-model="importPathValue" placeholder="请选择表格路径" readonly
-						          @click="btnClickImport"></el-input>
+						<el-input v-model="importPathValue"
+						          placeholder="请选择表格路径" readonly
+						          @click="btnClickImport">
+						</el-input>
 					</div>
+
 					<div class="m-button">
 						<el-button type="primary" @click="btnClickImport">选择</el-button>
 					</div>
 				</div>
 
 				<div class="m-list">
-					<XlsFileItem v-for="(name, index) in xlsFileNames" :key="index" v-model="selectItems[index]"
+					<XlsFileItem v-for="(name, index) in xlsFileNames"
+					             :key="index"
+					             v-model="selectItems[index]"
 					             :label-name="name">
+
 						<div>{{ name }}</div>
+
 					</XlsFileItem>
 				</div>
 			</el-col>
@@ -27,8 +34,8 @@
 				<el-card class="card-container">
 					<div slot="header">导出设置</div>
 					<div class="m-path-select2">
-						<el-input v-model="exportPath" placeholder="导出路径"></el-input>
-						<el-button style="margin-left: 5px" type="primary" @click="exportPathClick">选择</el-button>
+						<el-input v-model="exportPath" placeholder="导出路径" style="width: 80%"></el-input>
+						<el-button type="primary" @click="exportPathClick">选择</el-button>
 					</div>
 
 					<div class="set-info">
@@ -126,6 +133,7 @@ const btnClickImport = async () => {
 
 .left-path-container {
 	width: 100%;
+	padding-top: 5px;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -170,13 +178,16 @@ const btnClickImport = async () => {
 }
 
 .m-path-select1 {
-	width: 100%;
-	padding-right: 3px;
+	width: 90%;
+	padding: 5px 10px;
+}
+
+.m-button {
+	padding: 5px 10px;
 }
 
 .m-path-select2 {
 	padding-top: 5px;
-	width: 100%;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
