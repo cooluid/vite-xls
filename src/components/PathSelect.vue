@@ -39,16 +39,18 @@
 
 					<div class="set-info">
 						<div class="m-switch">
-							<el-switch active-text="导出JSON" class="m-switch-item"></el-switch>
-							<el-switch active-text="导出AMF" class="m-switch-item"></el-switch>
+							<el-switch v-model="store.exportType" active-text="导出JSON"></el-switch>
+							<el-switch v-model="store.exportType" active-text="导出AMF"></el-switch>
 						</div>
 						<div class="grp-button">
-							<el-tooltip content="仅导出选中的表格" effect="light" placement="top">
-								<el-button class="summit-button" type="primary" @click="btnExport(0)">导出选中</el-button>
-							</el-tooltip>
-							<el-tooltip content="导出路径下的所有表格" effect="light" placement="top">
-								<el-button class="summit-button" type="warning" @click="btnExport(1)">导出全部</el-button>
-							</el-tooltip>
+							<el-button class="summit-button" type="primary" @click="btnExport(0)"
+							           @mouseout="handleMouseOut"
+							           @mouseover="handleMouseOver">
+								导出选中
+							</el-button>
+							<el-button class="summit-button" type="warning" @click="btnExport(1)" @mouseout="handleMouseOut"
+							           @mouseover="handleMouseOver">导出全部
+							</el-button>
 						</div>
 					</div>
 				</el-card>
@@ -80,6 +82,24 @@ const btnClickImport = async () => {
 }
 
 const inputBox = ref(null);
+
+const handleMouseOver = (event: MouseEvent) => {
+	anime({
+		targets: event.currentTarget,
+		scale: 1.02,
+		duration: 50,
+		easing: 'easeInOutQuad',
+	})
+}
+
+const handleMouseOut = (event: MouseEvent) => {
+	anime({
+		targets: event.currentTarget,
+		scale: 1,
+		duration: 50,
+		easing: 'easeInOutQuad',
+	})
+}
 
 const btnExport = async (type: number) => {
 	if (!store.exportPath) {
@@ -173,11 +193,8 @@ const btnExport = async (type: number) => {
 
 .m-switch {
 	display: flex;
-	padding-top: 5px;
-}
-
-.m-switch-item {
-	margin: 10px 10px 20px 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 .summit-button {
