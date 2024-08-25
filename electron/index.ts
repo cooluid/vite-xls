@@ -17,7 +17,6 @@ function createWindow() {
 			resizable: false,
 			fullscreenable: false,
 			maximizable: false,
-			frame: false,
 			movable: true,
 			webPreferences: {
 				contextIsolation: true,
@@ -37,7 +36,6 @@ function createWindow() {
 			resizable: false,
 			fullscreenable: false,
 			maximizable: false,
-			frame: false,
 			movable: true,
 			webPreferences: {
 				contextIsolation: true,
