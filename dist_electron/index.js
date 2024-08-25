@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path_1 = __importDefault(require("path"));
 const fs = __importStar(require("node:fs"));
+const xlsx_1 = __importDefault(require("xlsx"));
 function createWindow() {
     const isDev = process.env.IS_DEV === "true";
     console.log("isDEV", isDev);
@@ -71,17 +72,32 @@ function createWindow() {
         win.loadURL(`file://${path_1.default.resolve(__dirname, '../')}/dist/index.html`).then();
     }
     electron_1.ipcMain.handle("dialog:openDirectory", async (evt, ...args) => {
-        console.log(`收到渲染进程发来的消息dialog:openDirectory`, evt, ...args);
         const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openDirectory'] });
         return result.filePaths;
     });
     electron_1.ipcMain.handle("dialog:openFile", async (evt, ...args) => {
-        console.log(`收到渲染进程发来的消息dialog:openFile`, evt, ...args);
         const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openFile'] });
         return result.filePaths;
     });
+    electron_1.ipcMain.on("read-file", (event, filePath) => {
+        fs.readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            event.reply("file-data", data);
+        });
+    });
+    electron_1.ipcMain.on("read-excel", (event, filePath) => {
+        try {
+            const workbook = xlsx_1.default.readFile(filePath);
+            event.reply("excel-data", workbook);
+        }
+        catch (e) {
+            console.error(e);
+        }
+    });
     electron_1.ipcMain.handle("get-files-in-directory", async (evt, dirPath) => {
-        console.log(`收到渲染进程发来的消息get-files-in-directory`, evt, dirPath);
         try {
             return fs.readdirSync(dirPath);
         }

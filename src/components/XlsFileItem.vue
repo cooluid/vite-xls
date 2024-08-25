@@ -1,35 +1,34 @@
 <script lang="ts" setup>
-import {ref, watch} from "vue";
+import {useXlsxOptionsStore, XlsItem} from "../stores/XlsxOptionsStore.ts";
+import {ref} from "vue";
 
 const props = defineProps({
-	modelValue: Boolean,
-	labelName: {
-		type: String,
-		default: ""
+	modelValue: {
+		type: Object as () => XlsItem,
+		required: true
 	}
 });
 
-const isSelected = ref(props.modelValue);
-const emit = defineEmits(["update:modelValue"]);
+let isSelected = ref(props.modelValue.isSelected);
+const emit = defineEmits(['update:modelValue']);
+const store = useXlsxOptionsStore();
 
-watch(isSelected, (newVal => {
-	console.log("isSelected", newVal);
-	emit("update:modelValue", newVal);
-}));
-
+const itemClick = () => {
+	let item = {...props.modelValue, isSelected: !props.modelValue.isSelected};
+	emit("update:modelValue", item);
+	store.updateSelectedXls(item.index, item.isSelected);
+}
 
 </script>
 
 <template>
-	<div>
-		<div :class="{selected: isSelected}" class="list-item" @click="isSelected = !isSelected">
-			<el-checkbox v-model="isSelected" :label="labelName" @click.stop>
-				<slot></slot>
-			</el-checkbox>
-
-		</div>
+	<div :class="{selected: modelValue.isSelected}" class="list-item">
+		<el-checkbox v-model="isSelected" style="width: 100%" @click="itemClick">
+			<slot></slot>
+		</el-checkbox>
 
 	</div>
+
 </template>
 
 <style scoped>
@@ -40,8 +39,7 @@ watch(isSelected, (newVal => {
 	white-space: nowrap;
 	font-size: 16px;
 	text-align: left;
-	border-bottom: 1px solid #ccc;
-	color: #333;
+	border-bottom: 1px dashed rgb(0, 0, 0);
 	transition: background-color 0.2s ease;
 	cursor: pointer;
 	box-sizing: border-box;

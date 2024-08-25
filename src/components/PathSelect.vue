@@ -5,26 +5,25 @@
 		</div>
 		<el-row>
 			<el-col :span="12" class="left-col">
-				<div class="left-path-container">
+				<div class="left-path-container" @click="btnClickImport">
 					<div class="m-path-select1">
-						<el-input v-model="importPathValue"
-						          placeholder="请选择表格路径" readonly
-						          @click="btnClickImport">
+						<el-input
+								v-model="xlsPath"
+								placeholder="请选择表格路径" readonly>
 						</el-input>
 					</div>
 
 					<div class="m-button">
-						<el-button type="primary" @click="btnClickImport">选择</el-button>
+						<el-button type="primary">选择</el-button>
 					</div>
 				</div>
 
 				<div class="m-list">
-					<XlsFileItem v-for="(name, index) in xlsFileNames"
+					<XlsFileItem v-for="(item, index) in xlsFileItemList"
 					             :key="index"
-					             v-model="selectItems[index]"
-					             :label-name="name">
+					             v-model="xlsFileItemList[index]">
 
-						<div>{{ name }}</div>
+						<div>{{ item.name }}</div>
 
 					</XlsFileItem>
 				</div>
@@ -34,18 +33,22 @@
 				<el-card class="card-container">
 					<div slot="header">导出设置</div>
 					<div class="m-path-select2">
-						<el-input v-model="exportPath" placeholder="导出路径" style="width: 80%"></el-input>
-						<el-button type="primary" @click="exportPathClick">选择</el-button>
+						<el-input ref="inputBox" placeholder="导出路径" style="width: 80%"></el-input>
+						<el-button type="primary">选择</el-button>
 					</div>
 
 					<div class="set-info">
 						<div class="m-switch">
-							<el-switch class="m-switch-item" v-model="exportJson" active-text="导出JSON"></el-switch>
-							<el-switch class="m-switch-item" v-model="exportAmf" active-text="导出AMF"></el-switch>
+							<el-switch active-text="导出JSON" class="m-switch-item"></el-switch>
+							<el-switch active-text="导出AMF" class="m-switch-item"></el-switch>
 						</div>
 						<div class="grp-button">
-							<el-button class="summit-button" type="primary" @click="btnClickExportSel">导出选中</el-button>
-							<el-button class="summit-button" type="warning" @click="btnClickExportAll">导出全部</el-button>
+							<el-tooltip content="仅导出选中的表格" effect="light" placement="top">
+								<el-button class="summit-button" type="primary" @click="btnExport(0)">导出选中</el-button>
+							</el-tooltip>
+							<el-tooltip content="导出路径下的所有表格" effect="light" placement="top">
+								<el-button class="summit-button" type="warning" @click="btnExport(1)">导出全部</el-button>
+							</el-tooltip>
 						</div>
 					</div>
 				</el-card>
@@ -54,54 +57,62 @@
 	</div>
 </template>
 <script setup lang="ts">
+import {useXlsxOptionsStore, XlsItem} from "../stores/XlsxOptionsStore.ts";
 import {ref} from "vue";
 import XlsFileItem from "./XlsFileItem.vue";
-import {useFileStore} from "../stores/FileStore.ts";
+import {xlsRead} from "../utils/XlsxUtil.ts";
+import {ElInput, ElNotification} from "element-plus";
+import anime from 'animejs'
 
-const fileStore = useFileStore();
-let importPathValue = ref(fileStore.getImportPath() || "");
-const exportPath = ref("");
-let xlsFileNames = ref([] as string[]);
+const store = useXlsxOptionsStore();
+let xlsPath = ref(store.getXlsPath());
+let xlsFileItemList = ref([] as XlsItem[]);
 
-const exportJson = ref(0);
-const exportAmf = ref(0);
-
-const selectItems = ref(xlsFileNames.value.map(() => false));
-
-const exportPathClick = async () => {
-	const selectPath = await window.electronAPI.invoke("dialog:openDirectory", {
-		data: "hello",
+if (xlsPath.value) {
+	store.getXlsxList().then((list) => {
+		xlsFileItemList.value = list;
 	});
-
-	if (selectPath?.length > 0) {
-		exportPath.value = selectPath[0];
-		fileStore.setExportPath(exportPath.value);
-	}
 }
 
-const btnClickExportSel = async () => {
-
-};
-
-const btnClickExportAll = async () => {
-
-};
-
 const btnClickImport = async () => {
-	fileStore.clearAllNames();
+	xlsPath.value = await store.setXlsPath();
+	xlsFileItemList.value = await store.getXlsxList();
+}
 
-	let importPath = await window.electronAPI.invoke("dialog:openDirectory", {
-		data: "hello",
-	});
+const inputBox = ref(null);
 
-	if (importPath?.length > 0) {
-		const fileNames = await window.electronAPI.invoke("get-files-in-directory", importPath[0]);
-		xlsFileNames = fileNames;
-		fileStore.setFileList(JSON.stringify(fileNames));
-		importPathValue.value = importPath[0];
+const btnExport = async (type: number) => {
+	if (!store.exportPath) {
+		ElNotification({
+			title: '导出路径未设置',
+			message: '请先设置导出路径',
+			type: 'error'
+		});
+
+		inputBox.value && anime({
+			targets: (inputBox.value as any).$el,
+			translateX: [
+				{value: -10, duration: 50},
+				{value: 10, duration: 50},
+				{value: -10, duration: 50},
+				{value: 10, duration: 50},
+				{value: 0, duration: 50},
+			],
+			easing: 'easeInOutQuad',
+		});
+		return;
 	}
-};
+//获取选中的
+	try {
+		let map = await xlsRead(type);
+		console.log(`map`, map);
+
+	} catch (e) {
+		console.error(e);
+	}
+}
 </script>
+
 <style scoped>
 .container {
 	width: 100%;
@@ -199,5 +210,4 @@ const btnClickImport = async () => {
 	margin-left: 20px;
 	margin-right: 20px;
 }
-
 </style>

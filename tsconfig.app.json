@@ -1,29 +1,44 @@
 {
-	"compilerOptions": {
-		"target": "ESNext",
-		"useDefineForClassFields": true,
-		"module": "ESNext",
-		"lib": ["ES2020", "DOM", "DOM.Iterable"],
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"rootDir": "./src",
-		"outDir": "dist",
-		"esModuleInterop": true,
-		"baseUrl": ".",
-		"types": ["node"],
-		/* Bundler mode */
-		"moduleResolution": "bundler",
-		"allowImportingTsExtensions": true,
-		"isolatedModules": true,
-		"moduleDetection": "force",
-		"noEmit": true,
-		"jsx": "preserve",
-
-		/* Linting */
-		"strict": true,
-		"noUnusedLocals": false,
-		"noUnusedParameters": false,
-		"noFallthroughCasesInSwitch": true
-	},
-	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/global.d.ts"]
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": "./src",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "types": [
+      "node"
+    ],
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "preserve",
+    /* Linting */
+    "strict": true,
+    // 开启所有严格类型检查选项
+    "noImplicitAny": true,
+    // 禁止隐式的 any 类型
+    "strictNullChecks": true,
+    // 启用严格的 null 检查
+    "strictFunctionTypes": true,
+    // 检查函数类型的兼容性
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/global.d.ts"
+  ]
 }
