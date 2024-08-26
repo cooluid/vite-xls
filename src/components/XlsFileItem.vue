@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import {useXlsxOptionsStore, XlsItem} from "../stores/XlsxOptionsStore.ts";
-import {computed} from "vue";
+import { useXlsxOptionsStore, XlsItem } from "../stores/XlsxOptionsStore.ts";
+import { computed } from "vue";
 
 const props = defineProps<{
-	modelValue: XlsItem
+	modelValue: XlsItem;
 }>();
 
 const emit = defineEmits<{
-	(e: 'update:modelValue', value: XlsItem): void
+	(e: "update:modelValue", value: XlsItem): void;
 }>();
 
 const store = useXlsxOptionsStore();
@@ -15,16 +15,15 @@ const store = useXlsxOptionsStore();
 const isSelected = computed({
 	get: () => props.modelValue.isSelected,
 	set: (value) => {
-		const updatedItem = {...props.modelValue, isSelected: value};
+		const updatedItem = { ...props.modelValue, isSelected: value };
 		emit("update:modelValue", updatedItem);
 		store.updateSelectedXls(updatedItem.index, value);
-	}
+	},
 });
-
 </script>
 
 <template>
-	<div :class="{ selected: modelValue.isSelected }" class="list-item">
+	<div :class="[{ selected: modelValue.isSelected }, 'list-item']">
 		<el-checkbox v-model="isSelected" class="full-width">
 			<slot></slot>
 		</el-checkbox>

@@ -1,108 +1,122 @@
-import {app, BrowserWindow, dialog, ipcMain} from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'path'
-import * as fs from "node:fs";
+import * as fs from "node:fs/promises"
 import xlsx from 'xlsx'
 import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
 
-function createWindow() {
+async function createWindow() {
 	const isDev = process.env.IS_DEV === "true";
 	console.log("isDEV", isDev);
 
-	let win: BrowserWindow | null;
-
-	if (isDev) {
-		win = new BrowserWindow({
-			width: 1000,
-			height: 800,
-			resizable: false,
-			fullscreenable: false,
-			maximizable: false,
-			movable: true,
-			webPreferences: {
-				contextIsolation: true,
-				nodeIntegration: false,
-				allowRunningInsecureContent: true,
-				preload: path.join(__dirname, './preload.js')
-			}
-		});
-
-		win.loadURL("http://localhost:5173").then();
-		win.webContents.openDevTools();
-
-	} else {
-		win = new BrowserWindow({
-			width: 1000,
-			height: 800,
-			resizable: false,
-			fullscreenable: false,
-			maximizable: false,
-			movable: true,
-			webPreferences: {
-				contextIsolation: true,
-				nodeIntegration: false,
-				allowRunningInsecureContent: false,
-				preload: path.join(__dirname, './preload.js')
-			}
-		});
-
-		win.loadURL(`file://${path.resolve(__dirname, '../')}/dist/index.html`).then();
+	if (process.env.VSCODE_DEBUG === "true") {
+		await new Promise(resolve => setTimeout(resolve, 5000));
 	}
 
-	ipcMain.handle("dialog:openDirectory", async (evt: IpcMainInvokeEvent, ...args: any[]) => {
-		const result = await dialog.showOpenDialog(win as BrowserWindow, {properties: ['openDirectory']});
+	const win = new BrowserWindow(getWindowOptions(isDev));
+	setupIpcHandlers(win);
 
-		return result.filePaths;
-	});
-
-	ipcMain.handle("dialog:openFile", async (evt: IpcMainInvokeEvent, ...args: any[]) => {
-		const result = await dialog.showOpenDialog(win as BrowserWindow, {properties: ['openFile']});
-
-		return result.filePaths;
-	});
-
-	ipcMain.on("read-file", (event, filePath) => {
-		fs.readFile(filePath, 'utf8', (err, data) => {
-			if (err) {
-				console.error(err);
-				return;
-			}
-
-			event.reply("file-data", data);
-		});
-	});
-
-	ipcMain.on("read-excel", (event, filePath) => {
-		try {
-			const workbook = xlsx.readFile(filePath);
-			event.reply("excel-data", workbook);
-
-		} catch (e) {
-			console.error(e);
-		}
-	});
-
-	ipcMain.handle("get-files-in-directory", async (evt: IpcMainInvokeEvent, dirPath: string) => {
-		try {
-			return fs.readdirSync(dirPath);
-
-		} catch (e) {
-			console.error(e);
-			return [];
-		}
-	})
+	if (isDev) {
+		await loadDevServer(win);
+	} else {
+		await win.loadURL(`file://${path.resolve(__dirname, '../')}/dist/index.html`);
+	}
 }
 
-app.whenReady().then(() => {
-	// 创建windows应用
-	createWindow();
+function getWindowOptions(isDev: boolean): Electron.BrowserWindowConstructorOptions {
+	return {
+		width: 1000,
+		height: 800,
+		resizable: false,
+		fullscreenable: false,
+		maximizable: false,
+		movable: true,
+		webPreferences: {
+			devTools: isDev,
+			contextIsolation: true,
+			nodeIntegration: false,
+			allowRunningInsecureContent: isDev,
+			preload: path.join(__dirname, './preload.js')
+		}
+	};
+}
 
-	// 延迟3s 等待应用激活
-	setTimeout(() => {
-		app.on('activate', function () {
-			// 如果应用激活后,窗口依然为0,则重新创建windows应用
-			if (BrowserWindow.getAllWindows().length === 0) createWindow();
-		});
-	}, 3000);
+async function loadDevServer(win: BrowserWindow, retryCount = 0) {
+	try {
+		await win.loadURL("http://localhost:5173");
+		win.webContents.openDevTools();
+	} catch (error) {
+		console.error(`加载开发服务器失败，尝试重试 (${retryCount + 1}/5)`);
+		if (retryCount < 4) {
+			setTimeout(() => loadDevServer(win, retryCount + 1), 1000);
+		} else {
+			console.error("无法连接到开发服务器，请确保开发服务器已启动");
+		}
+	}
+}
+
+function setupIpcHandlers(win: BrowserWindow) {
+	console.log("setupIpcHandlers");
+	ipcMain.handle("dialog:openDirectory", async () => {
+		const result = await dialog.showOpenDialog(win, { properties: ['openDirectory'] });
+		return result.filePaths;
+	});
+
+	ipcMain.handle("dialog:openFile", async () => {
+		const result = await dialog.showOpenDialog(win, { properties: ['openFile'] });
+		return result.filePaths;
+	});
+
+	ipcMain.handle("read-file", async (event, filePath) => {
+		try {
+			return await fs.readFile(filePath, 'utf8');
+		} catch (err) {
+			console.error(err);
+			throw err;
+		}
+	});
+
+	ipcMain.handle("read-excel", async (event, filePath) => {
+		try {
+			return xlsx.readFile(filePath);
+		} catch (e) {
+			console.error(e);
+			throw e;
+		}
+	});
+
+	ipcMain.handle('get-files-in-directory', async (event, dirPath) => {
+		try {
+			const files = await fs.readdir(dirPath);
+			return files;
+
+		} catch (error) {
+			console.error('读取目录失败:', error);
+			throw error;
+		}
+	});
+
+	ipcMain.handle('join-paths', (event, ...paths: string[]) => {
+		return path.join(...paths);
+	});
+
+	ipcMain.handle('write-file', async (event, filePath, content) => {
+		try {
+			await fs.writeFile(filePath, content);
+		} catch (error) {
+			console.error('写入文件失败:', error);
+			throw error;
+		}
+	});
+}
+
+app.whenReady().then(async () => {
+	// 创建windows应用
+	await createWindow();
+	app.on('activate', async function () {
+		if (BrowserWindow.getAllWindows().length === 0) {
+			await createWindow();
+		}
+	});
 });
 
 app.on('window-all-closed', () => {

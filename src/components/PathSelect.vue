@@ -7,9 +7,7 @@
 			<el-col :span="12" class="left-col">
 				<div class="left-path-container" @click="btnClickImport">
 					<div class="m-path-select1">
-						<el-input
-								v-model="xlsPath"
-								placeholder="请选择表格路径" readonly>
+						<el-input v-model="xlsPath" placeholder="请选择表格路径" readonly>
 						</el-input>
 					</div>
 
@@ -19,12 +17,12 @@
 				</div>
 
 				<div class="m-list">
-					<XlsFileItem v-for="(item, index) in xlsFileItemList"
-					             :key="index"
-					             v-model="xlsFileItemList[index]">
-
+					<XlsFileItem
+						v-for="(item, index) in xlsFileItemList"
+						:key="index"
+						v-model="xlsFileItemList[index]"
+					>
 						<div>{{ item.name }}</div>
-
 					</XlsFileItem>
 				</div>
 			</el-col>
@@ -33,23 +31,42 @@
 				<el-card class="card-container">
 					<div slot="header">导出设置</div>
 					<div class="m-path-select2">
-						<el-input ref="inputBox" placeholder="导出路径" style="width: 80%"></el-input>
-						<el-button type="primary">选择</el-button>
+						<el-input
+							v-model="exportPath"
+							ref="inputBox"
+							placeholder="导出路径"
+							style="width: 80%"
+						></el-input>
+						<el-button type="primary" @click="btnClickExportPath"
+							>选择</el-button
+						>
 					</div>
 
 					<div class="set-info">
 						<div class="m-switch">
-							<el-switch v-model="store.exportType" active-text="导出JSON"></el-switch>
-							<el-switch v-model="store.exportType" active-text="导出AMF"></el-switch>
+							<el-switch
+								v-model="store.exportType"
+								active-text="导出JSON"
+							></el-switch>
+							<el-switch
+								v-model="store.exportType"
+								active-text="导出AMF"
+							></el-switch>
 						</div>
 						<div class="grp-button">
-							<el-button class="summit-button" type="primary" @click="btnExport(0)"
-							           @mouseout="handleMouseOut"
-							           @mouseover="handleMouseOver">
+							<el-button
+								class="summit-button"
+								type="primary"
+								@click="btnExport(0)"
+							>
 								导出选中
 							</el-button>
-							<el-button class="summit-button" type="warning" @click="btnExport(1)" @mouseout="handleMouseOut"
-							           @mouseover="handleMouseOver">导出全部
+							<el-button
+								class="summit-button"
+								type="warning"
+								@click="btnExport(1)"
+							>
+								导出全部
 							</el-button>
 						</div>
 					</div>
@@ -59,78 +76,46 @@
 	</div>
 </template>
 <script setup lang="ts">
-import {useXlsxOptionsStore, XlsItem} from "../stores/XlsxOptionsStore.ts";
-import {ref} from "vue";
+import * as elementPlus from "element-plus";
+import { computed, ref, watchEffect } from "vue";
+import { useXlsxOptionsStore } from "../stores/XlsxOptionsStore";
+import { processAndExportData, showNotification } from "../utils/XlsxUtil";
 import XlsFileItem from "./XlsFileItem.vue";
-import {xlsRead} from "../utils/XlsxUtil.ts";
-import {ElInput, ElNotification} from "element-plus";
-import anime from 'animejs'
 
 const store = useXlsxOptionsStore();
-let xlsPath = ref(store.getXlsPath());
-let xlsFileItemList = ref([] as XlsItem[]);
+const xlsPath = computed(() => store.xlsPath);
+const exportPath = computed(() => store.exportPath);
+const xlsFileItemList = computed(() => store.xlsxList);
 
-if (xlsPath.value) {
-	store.getXlsxList().then((list) => {
-		xlsFileItemList.value = list;
-	});
-}
+watchEffect(async () => {
+	if (xlsPath.value) {
+		await store.getXlsxList();
+	}
+});
 
 const btnClickImport = async () => {
-	xlsPath.value = await store.setXlsPath();
-	xlsFileItemList.value = await store.getXlsxList();
-}
+	await store.setXlsPath(0);
+};
 
-const inputBox = ref(null);
+const btnClickExportPath = () => {
+	store.setXlsPath(1);
+};
 
-const handleMouseOver = (event: MouseEvent) => {
-	anime({
-		targets: event.currentTarget,
-		scale: 1.02,
-		duration: 50,
-		easing: 'easeInOutQuad',
-	})
-}
-
-const handleMouseOut = (event: MouseEvent) => {
-	anime({
-		targets: event.currentTarget,
-		scale: 1,
-		duration: 50,
-		easing: 'easeInOutQuad',
-	})
-}
+const inputBox = ref<InstanceType<typeof elementPlus.ElInput> | null>(null);
 
 const btnExport = async (type: number) => {
+	const store = useXlsxOptionsStore();
 	if (!store.exportPath) {
-		ElNotification({
-			title: '导出路径未设置',
-			message: '请先设置导出路径',
-			type: 'error'
-		});
-
-		inputBox.value && anime({
-			targets: (inputBox.value as any).$el,
-			translateX: [
-				{value: -10, duration: 50},
-				{value: 10, duration: 50},
-				{value: -10, duration: 50},
-				{value: 10, duration: 50},
-				{value: 0, duration: 50},
-			],
-			easing: 'easeInOutQuad',
-		});
+		showNotification("请选择导出路径", "error");
 		return;
 	}
-//获取选中的
-	try {
-		let map = await xlsRead(type);
-		console.log(`map`, map);
 
+	try {
+		await processAndExportData(type, store.exportPath);
 	} catch (e) {
-		console.error(e);
+		showNotification((e as Error).message, "error");
 	}
-}
+};
 </script>
 
 <style scoped>
@@ -199,6 +184,11 @@ const btnExport = async (type: number) => {
 
 .summit-button {
 	width: 150px;
+	transition: transform 0.05s ease-in-out;
+}
+
+.summit-button:hover {
+	transform: scale(1.02);
 }
 
 .set-info {

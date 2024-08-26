@@ -28,94 +28,114 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path_1 = __importDefault(require("path"));
-const fs = __importStar(require("node:fs"));
+const fs = __importStar(require("node:fs/promises"));
 const xlsx_1 = __importDefault(require("xlsx"));
-function createWindow() {
+async function createWindow() {
     const isDev = process.env.IS_DEV === "true";
     console.log("isDEV", isDev);
-    let win;
+    if (process.env.VSCODE_DEBUG === "true") {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+    const win = new electron_1.BrowserWindow(getWindowOptions(isDev));
+    setupIpcHandlers(win);
     if (isDev) {
-        win = new electron_1.BrowserWindow({
-            width: 1000,
-            height: 800,
-            resizable: false,
-            fullscreenable: false,
-            maximizable: false,
-            movable: true,
-            webPreferences: {
-                contextIsolation: true,
-                nodeIntegration: false,
-                allowRunningInsecureContent: true,
-                preload: path_1.default.join(__dirname, './preload.js')
-            }
-        });
-        win.loadURL("http://localhost:5173").then();
-        win.webContents.openDevTools();
+        await loadDevServer(win);
     }
     else {
-        win = new electron_1.BrowserWindow({
-            width: 1000,
-            height: 800,
-            resizable: false,
-            fullscreenable: false,
-            maximizable: false,
-            movable: true,
-            webPreferences: {
-                contextIsolation: true,
-                nodeIntegration: false,
-                allowRunningInsecureContent: false,
-                preload: path_1.default.join(__dirname, './preload.js')
-            }
-        });
-        win.loadURL(`file://${path_1.default.resolve(__dirname, '../')}/dist/index.html`).then();
+        await win.loadURL(`file://${path_1.default.resolve(__dirname, '../')}/dist/index.html`);
     }
-    electron_1.ipcMain.handle("dialog:openDirectory", async (evt, ...args) => {
+}
+function getWindowOptions(isDev) {
+    return {
+        width: 1000,
+        height: 800,
+        resizable: false,
+        fullscreenable: false,
+        maximizable: false,
+        movable: true,
+        webPreferences: {
+            devTools: isDev,
+            contextIsolation: true,
+            nodeIntegration: false,
+            allowRunningInsecureContent: isDev,
+            preload: path_1.default.join(__dirname, './preload.js')
+        }
+    };
+}
+async function loadDevServer(win, retryCount = 0) {
+    try {
+        await win.loadURL("http://localhost:5173");
+        win.webContents.openDevTools();
+    }
+    catch (error) {
+        console.error(`加载开发服务器失败，尝试重试 (${retryCount + 1}/5)`);
+        if (retryCount < 4) {
+            setTimeout(() => loadDevServer(win, retryCount + 1), 1000);
+        }
+        else {
+            console.error("无法连接到开发服务器，请确保开发服务器已启动");
+        }
+    }
+}
+function setupIpcHandlers(win) {
+    console.log("setupIpcHandlers");
+    electron_1.ipcMain.handle("dialog:openDirectory", async () => {
         const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openDirectory'] });
         return result.filePaths;
     });
-    electron_1.ipcMain.handle("dialog:openFile", async (evt, ...args) => {
+    electron_1.ipcMain.handle("dialog:openFile", async () => {
         const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openFile'] });
         return result.filePaths;
     });
-    electron_1.ipcMain.on("read-file", (event, filePath) => {
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            event.reply("file-data", data);
-        });
-    });
-    electron_1.ipcMain.on("read-excel", (event, filePath) => {
+    electron_1.ipcMain.handle("read-file", async (event, filePath) => {
         try {
-            const workbook = xlsx_1.default.readFile(filePath);
-            event.reply("excel-data", workbook);
+            return await fs.readFile(filePath, 'utf8');
+        }
+        catch (err) {
+            console.error(err);
+            throw err;
+        }
+    });
+    electron_1.ipcMain.handle("read-excel", async (event, filePath) => {
+        try {
+            return xlsx_1.default.readFile(filePath);
         }
         catch (e) {
             console.error(e);
+            throw e;
         }
     });
-    electron_1.ipcMain.handle("get-files-in-directory", async (evt, dirPath) => {
+    electron_1.ipcMain.handle('get-files-in-directory', async (event, dirPath) => {
         try {
-            return fs.readdirSync(dirPath);
+            const files = await fs.readdir(dirPath);
+            return files;
         }
-        catch (e) {
-            console.error(e);
-            return [];
+        catch (error) {
+            console.error('读取目录失败:', error);
+            throw error;
+        }
+    });
+    electron_1.ipcMain.handle('join-paths', (event, ...paths) => {
+        return path_1.default.join(...paths);
+    });
+    electron_1.ipcMain.handle('write-file', async (event, filePath, content) => {
+        try {
+            await fs.writeFile(filePath, content);
+        }
+        catch (error) {
+            console.error('写入文件失败:', error);
+            throw error;
         }
     });
 }
-electron_1.app.whenReady().then(() => {
+electron_1.app.whenReady().then(async () => {
     // 创建windows应用
-    createWindow();
-    // 延迟3s 等待应用激活
-    setTimeout(() => {
-        electron_1.app.on('activate', function () {
-            // 如果应用激活后,窗口依然为0,则重新创建windows应用
-            if (electron_1.BrowserWindow.getAllWindows().length === 0)
-                createWindow();
-        });
-    }, 3000);
+    await createWindow();
+    electron_1.app.on('activate', async function () {
+        if (electron_1.BrowserWindow.getAllWindows().length === 0) {
+            await createWindow();
+        }
+    });
 });
 electron_1.app.on('window-all-closed', () => {
     electron_1.app.quit();

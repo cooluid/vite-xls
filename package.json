@@ -8,6 +8,7 @@
 		"build": "vue-tsc -b && vite build && yarn build:main",
 		"preview": "vite preview",
 		"start": "concurrently -k \"yarn dev\" \"wait-on http://localhost:5173 && cross-env IS_DEV=true electron .\"",
+		"start:debug": "concurrently -k \"yarn dev\" \"wait-on http://localhost:5173 && cross-env IS_DEV=true VSCODE_DEBUG=true electron --remote-debugging-port=9223 .\"",
 		"build:main": "tsc -b tsconfig.electron.json",
 		"dist": "yarn build && electron-builder --mac --dir"
 	},

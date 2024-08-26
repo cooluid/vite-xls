@@ -1,7 +1,8 @@
-import { defineStore } from "pinia";
 import { ElNotification } from "element-plus";
+import { defineStore } from "pinia";
 
 export interface XlsItem {
+  path: string;
   index: number;
   name: string;
   isSelected: boolean;
@@ -23,28 +24,31 @@ const useLocalStorage = (key: string) => ({
 
 export const useXlsxOptionsStore = defineStore("xlsxOptions", {
   state: (): XlsxOptionsState => ({
-    xlsPath: "",
-    exportPath: "",
+    xlsPath: useLocalStorage("importXlsPath").get() || "",
+    exportPath: useLocalStorage("exportXlsPath").get() || "",
     exportType: 0,
-    exportDataType: 0,
+    exportDataType: Number(useLocalStorage("exportDataType").get()) || 0,
     selectedXls: [],
     xlsxList: [],
   }),
   actions: {
-    async setXlsPath(): Promise<string> {
-      const paths = await window.electronAPI.invoke("dialog:openDirectory");
-      this.xlsPath = paths[0];
-      useLocalStorage("xlsPath").set(this.xlsPath);
-      return this.xlsPath;
+    async setXlsPath(type: number): Promise<void> {
+      const [path] = await window.electronAPI.invoke("dialog:openDirectory");
+      const storageKey = type === 0 ? "importXlsPath" : "exportXlsPath";
+      const stateProp = type === 0 ? "xlsPath" : "exportPath";
+
+      this[stateProp] = path;
+      useLocalStorage(storageKey).set(path);
     },
 
     async getXlsxList(): Promise<XlsItem[]> {
       try {
         const allFiles: string[] = await window.electronAPI.invoke("get-files-in-directory", this.xlsPath);
         this.xlsxList = allFiles
-          .filter(file => file.endsWith(".xlsx") || file.endsWith(".xls"))
-          .map((fileName, index) => ({ index, name: fileName, isSelected: false }));
+          .filter(file => /\.(xlsx|xls)$/.test(file))
+          .map((name, index) => ({ path: this.xlsPath, index, name, isSelected: false }));
         return this.xlsxList;
+
       } catch (e: any) {
         console.error(e);
         ElNotification({
@@ -60,35 +64,15 @@ export const useXlsxOptionsStore = defineStore("xlsxOptions", {
       const item = this.xlsxList[index];
       if (isSelected) {
         this.selectedXls.push({ ...item, isSelected: true });
+
       } else {
         this.selectedXls = this.selectedXls.filter(item => item.index !== index);
       }
-      console.log("this.selectedXls", this.selectedXls);
-    },
-
-    getXlsPath() {
-      this.xlsPath = useLocalStorage("xlsPath").get() || "";
-      return this.xlsPath;
-    },
-
-    setExportPath(exportPath: string) {
-      this.exportPath = exportPath;
-      useLocalStorage("exportPath").set(exportPath);
-    },
-
-    getExportPath() {
-      this.exportPath = useLocalStorage("exportPath").get() || "";
-      return this.exportPath;
     },
 
     setExportDataType(exportDataType: number) {
       this.exportDataType = exportDataType;
       useLocalStorage("exportDataType").set(exportDataType.toString());
-    },
-
-    getExportDataType() {
-      this.exportDataType = Number(useLocalStorage("exportDataType").get()) || 0;
-      return this.exportDataType;
     },
   },
 });

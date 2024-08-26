@@ -14,7 +14,7 @@ interface ParsedData {
 const HEADER_ROW = 2;
 const DATA_START_ROW = 4;
 
-function showNotification(message: string, type: 'success' | 'error' = 'success') {
+export function showNotification(message: string, type: 'success' | 'error' = 'success') {
   ElNotification({
     title: '提示',
     message,
@@ -84,10 +84,6 @@ export function parseWorkbook(workbookList: WorkBook[]): ParsedData | null {
     }
   }
 
-  if (Object.keys(parsedData).length > 0) {
-    showNotification('解析成功');
-  }
-
   return parsedData;
 }
 
@@ -98,12 +94,24 @@ export async function xlsRead(type: number): Promise<ParsedData | null> {
 
   for (const xls of selectedXls) {
     const path = `${store.xlsPath}/${xls.name}`;
-    const data: WorkBook = await new Promise((resolve) => {
-      window.electronAPI.receiveOnce("excel-data", (data: WorkBook) => resolve(data));
-      window.electronAPI.send("read-excel", path);
-    });
+    const data: WorkBook = await window.electronAPI.invoke("read-excel", path);
     excelDataList.push(data);
   }
 
   return parseWorkbook(excelDataList);
+}
+
+export async function processAndExportData(type: number, exportPath: string): Promise<void> {
+  const map = await xlsRead(type);
+  if (!map || typeof map !== 'object') {
+    throw new Error('无效的数据格式');
+  }
+
+  for (const [configName, configData] of Object.entries(map)) {
+    const fileName = `${configName}.json`;
+    const filePath = await window.electronAPI.invoke("join-paths", exportPath, fileName);
+    await window.electronAPI.invoke("write-file", filePath, JSON.stringify(configData, null, 2));
+  }
+
+  showNotification('导出成功');
 }
