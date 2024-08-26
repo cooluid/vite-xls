@@ -107,6 +107,8 @@ export async function processAndExportData(type: number, exportPath: string): Pr
     throw new Error('无效的数据格式');
   }
 
+  console.log(map);
+
   for (const [configName, configData] of Object.entries(map)) {
     const fileName = `${configName}.json`;
     const filePath = await window.electronAPI.invoke("join-paths", exportPath, fileName);
