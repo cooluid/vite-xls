@@ -1,0 +1,286 @@
+﻿{
+    "100": {
+        "1": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        },
+        "2": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        },
+        "3": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        },
+        "4": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        },
+        "5": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        }
+    },
+    "300": {
+        "1": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        },
+        "2": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        },
+        "3": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        },
+        "4": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        },
+        "5": {
+            "index": 1,
+            "type": 0,
+            "award": [
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                },
+                {
+                    "type": 0,
+                    "id": 99,
+                    "count": 200
+                }
+            ],
+            "posList": [
+                1,
+                2
+            ],
+            "params": {
+                "ext": 99
+            }
+        }
+    }
+}
