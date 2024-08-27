@@ -30,6 +30,7 @@ const electron_1 = require("electron");
 const path_1 = __importDefault(require("path"));
 const fs = __importStar(require("node:fs/promises"));
 const xlsx_1 = __importDefault(require("xlsx"));
+const electron_updater_1 = require("electron-updater");
 async function createWindow() {
     const isDev = process.env.IS_DEV === "true";
     console.log("isDEV", isDev);
@@ -137,6 +138,7 @@ electron_1.app.whenReady().then(async () => {
             await createWindow();
         }
     });
+    electron_updater_1.autoUpdater.checkForUpdatesAndNotify();
 });
 electron_1.app.on('window-all-closed', () => {
     electron_1.app.quit();

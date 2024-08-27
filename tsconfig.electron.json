@@ -20,7 +20,9 @@
 		// 使用Node.js的模块解析策略
 		"moduleResolution": "Node",
 		// 包含node类型定义
-		"types": ["node"]
+		"types": ["electron", "node"],
+		// 跳过对声明文件的检查
+		"skipLibCheck": true
 	},
 	// 指定需要编译的文件列表
 	"include": [
