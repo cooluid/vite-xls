@@ -1,70 +1,59 @@
 <template>
 	<div class="container">
-		<div class="m-title">
-			<div>表格转换工具</div>
-		</div>
+		<header class="m-title">
+			<h1>表格转换工具</h1>
+		</header>
 		<el-row>
 			<el-col :span="12" class="left-col">
-				<div class="left-path-container" @click="btnClickImport">
-					<div class="m-path-select1">
-						<el-input v-model="xlsPath" placeholder="请选择表格路径" readonly>
-						</el-input>
-					</div>
-
-					<div class="m-button">
-						<el-button type="primary">选择</el-button>
-					</div>
+				<div class="left-path-container" @click="handleImportClick">
+					<el-input
+						v-model="xlsPath"
+						placeholder="请选择表格路径"
+						readonly
+						class="m-path-select1"
+					/>
+					<el-button type="primary" class="m-button">选择</el-button>
 				</div>
-
 				<div class="m-list">
 					<XlsFileItem
 						v-for="(item, index) in xlsFileItemList"
-						:key="index"
+						:key="item.name"
 						v-model="xlsFileItemList[index]"
 					>
-						<div>{{ item.name }}</div>
+						{{ item.name }}
 					</XlsFileItem>
 				</div>
 			</el-col>
-
 			<el-col :span="12" class="right-col">
 				<el-card class="card-container">
-					<div slot="header">导出设置</div>
+					<template #header>导出设置</template>
 					<div class="m-path-select2">
 						<el-input
 							v-model="exportPath"
-							ref="inputBox"
 							placeholder="导出路径"
 							style="width: 80%"
-						></el-input>
-						<el-button type="primary" @click="btnClickExportPath"
-							>选择</el-button
-						>
+						/>
+						<el-button type="primary" @click="handleExportPathClick">
+							选择
+						</el-button>
 					</div>
-
 					<div class="set-info">
 						<div class="m-switch">
-							<el-switch
-								v-model="store.exportType"
-								active-text="导出JSON"
-							></el-switch>
-							<el-switch
-								v-model="store.exportType"
-								active-text="导出AMF"
-							></el-switch>
+							<el-switch v-model="store.exportType" active-text="导出JSON" />
+							<el-switch v-model="store.exportType" active-text="导出AMF" />
 						</div>
 						<div class="grp-button">
 							<el-button
 								class="summit-button"
 								type="primary"
-								@click="btnExport(0)"
+								@click="handleExport(0)"
 							>
 								导出选中
 							</el-button>
 							<el-button
 								class="summit-button"
 								type="warning"
-								@click="btnExport(1)"
+								@click="handleExport(1)"
 							>
 								导出全部
 							</el-button>
@@ -75,11 +64,12 @@
 		</el-row>
 	</div>
 </template>
+
 <script setup lang="ts">
-import * as elementPlus from "element-plus";
-import { computed, ref, watchEffect } from "vue";
+import { computed, watchEffect } from "vue";
+import { ElNotification } from "element-plus";
 import { useXlsxOptionsStore } from "../stores/XlsxOptionsStore";
-import { processAndExportData, showNotification } from "../utils/XlsxUtil";
+import { processAndExportData } from "../utils/XlsxUtil";
 import XlsFileItem from "./XlsFileItem.vue";
 
 const store = useXlsxOptionsStore();
@@ -93,27 +83,35 @@ watchEffect(async () => {
 	}
 });
 
-const btnClickImport = async () => {
-	await store.setXlsPath(0);
-};
+const handleImportClick = () => store.setXlsPath(0);
+const handleExportPathClick = () => store.setXlsPath(1);
 
-const btnClickExportPath = () => {
-	store.setXlsPath(1);
-};
-
-const inputBox = ref<InstanceType<typeof elementPlus.ElInput> | null>(null);
-
-const btnExport = async (type: number) => {
-	const store = useXlsxOptionsStore();
+const handleExport = async (type: number) => {
 	if (!store.exportPath) {
-		showNotification("请选择导出路径", "error");
+		ElNotification({
+			title: "提示",
+			message: "请选择导出路径",
+			type: "warning",
+			duration: 2000,
+		});
 		return;
 	}
 
 	try {
 		await processAndExportData(type, store.exportPath);
-	} catch (e) {
-		showNotification((e as Error).message, "error");
+		ElNotification({
+			title: "成功",
+			message: "导出成功",
+			type: "success",
+			duration: 2000,
+		});
+	} catch (error) {
+		ElNotification({
+			title: "错误",
+			message: (error as Error).message,
+			type: "error",
+			duration: 2000,
+		});
 	}
 };
 </script>
@@ -143,7 +141,7 @@ const btnExport = async (type: number) => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	color: black;
+	color: white;
 	background-color: #337ecc;
 }
 
@@ -158,7 +156,6 @@ const btnExport = async (type: number) => {
 .right-col {
 	display: flex;
 	flex-direction: row;
-	align-content: center;
 	align-items: center;
 	width: 100%;
 	height: 100%;
@@ -178,8 +175,7 @@ const btnExport = async (type: number) => {
 
 .m-switch {
 	display: flex;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding: 10px 0;
 }
 
 .summit-button {
@@ -214,7 +210,6 @@ const btnExport = async (type: number) => {
 .grp-button {
 	display: flex;
 	justify-content: space-between;
-	margin-left: 20px;
-	margin-right: 20px;
+	margin: 0 20px;
 }
 </style>

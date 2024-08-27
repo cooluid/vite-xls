@@ -9,7 +9,7 @@ async function createWindow() {
 	console.log("isDEV", isDev);
 
 	if (process.env.VSCODE_DEBUG === "true") {
-		await new Promise(resolve => setTimeout(resolve, 5000));
+		await new Promise(resolve => setTimeout(resolve, 2000));
 	}
 
 	const win = new BrowserWindow(getWindowOptions(isDev));

@@ -34,7 +34,7 @@ async function createWindow() {
     const isDev = process.env.IS_DEV === "true";
     console.log("isDEV", isDev);
     if (process.env.VSCODE_DEBUG === "true") {
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
     }
     const win = new electron_1.BrowserWindow(getWindowOptions(isDev));
     setupIpcHandlers(win);
