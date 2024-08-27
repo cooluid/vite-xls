@@ -3,6 +3,7 @@ import path from 'path'
 import * as fs from "node:fs/promises"
 import xlsx from 'xlsx'
 import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
+import { autoUpdater } from 'electron-updater';
 
 async function createWindow() {
 	const isDev = process.env.IS_DEV === "true";
@@ -30,6 +31,7 @@ function getWindowOptions(isDev: boolean): Electron.BrowserWindowConstructorOpti
 		fullscreenable: false,
 		maximizable: false,
 		movable: true,
+		frame: false,
 		webPreferences: {
 			devTools: isDev,
 			contextIsolation: true,
@@ -117,6 +119,7 @@ app.whenReady().then(async () => {
 			await createWindow();
 		}
 	});
+	autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('window-all-closed', () => {

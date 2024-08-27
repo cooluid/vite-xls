@@ -100,7 +100,6 @@ const createDataObject = (headers: string[], values: any[]): Record<string, any>
 // 工作簿解析函数
 export const parseWorkbook = (workbookList: WorkBook[]): ParsedData | null => {
   if (!workbookList.length) {
-    showNotification('请选择要解析的Excel文件', 'error');
     return null;
   }
 

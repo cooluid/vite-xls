@@ -53,6 +53,7 @@ function getWindowOptions(isDev) {
         fullscreenable: false,
         maximizable: false,
         movable: true,
+        frame: false,
         webPreferences: {
             devTools: isDev,
             contextIsolation: true,

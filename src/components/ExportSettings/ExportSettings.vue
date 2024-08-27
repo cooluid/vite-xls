@@ -18,7 +18,6 @@ const handleExport = async (type: number) => {
 
 	try {
 		await processAndExportData(type, store.exportPath);
-		showNotification("导出成功", "success");
 	} catch (error) {
 		showNotification((error as Error).message, "error");
 	}

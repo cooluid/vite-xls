@@ -10,7 +10,29 @@
 		"start": "concurrently -k \"yarn dev\" \"wait-on http://localhost:5173 && cross-env IS_DEV=true electron .\"",
 		"start:debug": "concurrently -k \"yarn dev\" \"wait-on http://localhost:5173 && cross-env IS_DEV=true VSCODE_DEBUG=true electron --remote-debugging-port=9223 .\"",
 		"build:main": "tsc -b tsconfig.electron.json",
-		"dist": "yarn build && electron-builder --mac --dir"
+		"dist": "cross-env NODE_ENV=production yarn build && electron-builder --mac --dir",
+		"postinstall": "electron-builder install-app-deps"
+	},
+	"dependencies": {
+		"animejs": "^3.2.2",
+		"electron-updater": "^6.2.1",
+		"element-plus": "^2.8.0",
+		"vue": "^3.4.35",
+		"xlsx": "^0.18.5",
+		"pinia": "^2.2.2"
+	},
+	"devDependencies": {
+		"@electron/packager": "^18.3.4",
+		"@types/animejs": "^3.1.12",
+		"@vitejs/plugin-vue": "^5.1.2",
+		"concurrently": "^8.2.2",
+		"cross-env": "^7.0.3",
+		"electron": "^31.4.0",
+		"electron-builder": "^24.13.3",
+		"typescript": "^5.5.3",
+		"vite": "^5.4.0",
+		"vue-tsc": "^2.0.29",
+		"wait-on": "^7.2.0"
 	},
 	"build": {
 		"appId": "com.cool.uid",
@@ -24,27 +46,17 @@
 		],
 		"mac": {
 			"target": "dmg"
-		}
-	},
-	"dependencies": {
-		"animejs": "^3.2.2",
-		"element-plus": "^2.8.0",
-		"vue": "^3.4.35",
-		"xlsx": "^0.18.5"
-	},
-	"devDependencies": {
-		"@electron/packager": "^18.3.4",
-		"@types/animejs": "^3.1.12",
-		"@vitejs/plugin-vue": "^5.1.2",
-		"concurrently": "^8.2.2",
-		"cross-env": "^7.0.3",
-		"electron": "^31.4.0",
-		"electron-browser-storage": "^1.0.7",
-		"electron-builder": "^24.13.3",
-		"pinia": "^2.2.2",
-		"typescript": "^5.5.3",
-		"vite": "^5.4.0",
-		"vue-tsc": "^2.0.29",
-		"wait-on": "^7.2.0"
+		},
+		"asar": true,
+		"compression": "maximum",
+		"extraResources": [
+			{
+				"from": "resources/",
+				"to": "resources",
+				"filter": [
+					"**/*"
+				]
+			}
+		]
 	}
 }

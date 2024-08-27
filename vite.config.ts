@@ -7,7 +7,21 @@ export default defineConfig({
   plugins: [vue()],
   base: "./",
   build: {
-    sourcemap: true,
+    sourcemap: false,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue', 'pinia', 'element-plus'],
+        },
+      },
+    },
   },
   resolve: {
     alias: {
