@@ -68,11 +68,11 @@
 <script setup lang="ts">
 import { computed, watchEffect } from "vue";
 import { ElNotification } from "element-plus";
-import { useXlsxOptionsStore } from "../stores/XlsxOptionsStore";
-import { processAndExportData } from "../utils/XlsxUtil";
+import { useXlsxStore } from "../stores/xlsxStore";
+import { processAndExportData } from "../utils/xlsxUtil";
 import XlsFileItem from "./XlsFileItem.vue";
 
-const store = useXlsxOptionsStore();
+const store = useXlsxStore();
 const xlsPath = computed(() => store.xlsPath);
 const exportPath = computed(() => store.exportPath);
 const xlsFileItemList = computed(() => store.xlsxList);

@@ -22,7 +22,7 @@ const useLocalStorage = (key: string) => ({
   set: (value: string) => localStorage.setItem(key, value),
 });
 
-export const useXlsxOptionsStore = defineStore("xlsxOptions", {
+export const useXlsxStore = defineStore("xlsxOptions", {
   state: (): XlsxOptionsState => ({
     xlsPath: useLocalStorage("importXlsPath").get() || "",
     exportPath: useLocalStorage("exportXlsPath").get() || "",

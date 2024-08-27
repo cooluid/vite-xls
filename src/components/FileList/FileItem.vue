@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { useXlsxStore, XlsItem } from "../stores/xlsxStore.ts";
 import { computed } from "vue";
-
+import { useXlsxStore, type XlsItem } from "@/stores/xlsxStore";
 const props = defineProps<{
 	modelValue: XlsItem;
 }>();

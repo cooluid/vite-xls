@@ -1,7 +1,7 @@
 import { ElNotification } from "element-plus";
 import * as xlsx from "xlsx";
 import { WorkBook, WorkSheet } from "xlsx";
-import { useXlsxOptionsStore } from "../stores/XlsxOptionsStore";
+import { useXlsxStore } from "../stores/xlsxStore";
 
 // 类型定义
 type NotificationType = 'success' | 'error';
@@ -118,7 +118,7 @@ export const parseWorkbook = (workbookList: WorkBook[]): ParsedData | null => {
 
 // 文件读取和导出函数
 export const xlsRead = async (type: number): Promise<ParsedData | null> => {
-  const store = useXlsxOptionsStore();
+  const store = useXlsxStore();
   const selectedXls = type === 0 ? store.selectedXls : store.xlsxList;
 
   const excelDataList = await Promise.all(
@@ -141,6 +141,4 @@ export const processAndExportData = async (type: number, exportPath: string): Pr
       await window.electronAPI.invoke("write-file", filePath, JSON.stringify(configData, null, 2));
     })
   );
-
-  showNotification('导出成功');
 };

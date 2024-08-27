@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import PathSelect from "./components/PathSelect.vue";
+import Home from "./views/Home.vue";
 </script>
 
 <template>
 	<div id="app-container">
-		<PathSelect></PathSelect>
+		<Home />
 	</div>
 </template>
 

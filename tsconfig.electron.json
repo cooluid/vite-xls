@@ -1,26 +1,30 @@
 {
 	// 定义编译器选项
 	"compilerOptions": {
-		// 目标是ESNext，使用最新的ECMAScript特性
+		// 使用最新的ECMAScript特性
 		"target": "ESNext",
-		// 模块系统使用CommonJS，允许使用require和module.exports
+		// 使用CommonJS模块系统，适用于Electron
 		"module": "CommonJS",
-		// 启用ES模块的互操作性，允许使用import语法导入CommonJS模块
+		// 允许使用import语法导入CommonJS模块
 		"esModuleInterop": true,
-		// 指定源文件目录为"electron"
+		// 指定源文件目录
 		"rootDir": "./electron",
-		// 指定输出目录为"dist_electron"
+		// 指定输出目录
 		"outDir": "dist_electron",
-		// 强制文件名中的大小写一致性，避免不同操作系统下的文件路径问题
+		// 强制文件名大小写一致性
 		"forceConsistentCasingInFileNames": true,
-		// 启用严格模式，提高代码的可靠性和可维护性
+		// 启用所有严格类型检查选项
 		"strict": true,
-		// 生成源映射文件，便于调试编译后的代码
+		// 生成源映射文件，便于调试
 		"sourceMap": true,
-		// 模块解析策略为Node.js的，默认行为，兼容性和性能表现良好
+		// 使用Node.js的模块解析策略
 		"moduleResolution": "Node",
+		// 包含node类型定义
 		"types": ["node"]
 	},
 	// 指定需要编译的文件列表
-	"include": ["electron/index.ts", "electron/preload.ts"]
+	"include": [
+		"electron/index.ts", // 包含主进程文件
+		"electron/preload.ts" // 包含预加载脚本
+	]
 }
