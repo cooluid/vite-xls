@@ -11,7 +11,9 @@
 		"start:debug": "concurrently -k \"yarn dev\" \"wait-on http://localhost:5173 && cross-env IS_DEV=true VSCODE_DEBUG=true electron --remote-debugging-port=9223 .\"",
 		"build:main": "tsc -b tsconfig.electron.json",
 		"dist": "cross-env NODE_ENV=production yarn build && electron-builder --mac --dir",
-		"postinstall": "electron-builder install-app-deps"
+		"postinstall": "electron-builder install-app-deps",
+		"clean": "rimraf dist_electron",
+		"build:mac": "vue-tsc && vite build && electron-builder --mac"
 	},
 	"dependencies": {
 		"animejs": "^3.2.2",
@@ -33,31 +35,8 @@
 		"typescript": "^5.5.3",
 		"vite": "^5.4.0",
 		"vue-tsc": "^2.0.29",
-		"wait-on": "^8.0.0"
-	},
-	"build": {
-		"appId": "com.cool.uid",
-		"productName": "xls vite",
-		"directories": {
-			"output": "dist_electron"
-		},
-		"files": [
-			"dist/**/*",
-			"dist_electron/**/*"
-		],
-		"mac": {
-			"target": "dmg"
-		},
-		"asar": true,
-		"compression": "maximum",
-		"extraResources": [
-			{
-				"from": "resources/",
-				"to": "resources",
-				"filter": [
-					"**/*"
-				]
-			}
-		]
+		"wait-on": "^8.0.0",
+		"vite-plugin-electron": "^0.28.7",
+		"rimraf": "^6.0.1"
 	}
 }

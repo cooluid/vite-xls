@@ -10,4 +10,3 @@ const electronAPI = {
 };
 // 在主世界中暴露 electronAPI 对象
 electron_1.contextBridge.exposeInMainWorld('electronAPI', electronAPI);
-//# sourceMappingURL=preload.js.map

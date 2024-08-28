@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'path'
 import * as fs from "node:fs/promises"
-import xlsx from 'xlsx'
+import * as xlsx from 'xlsx'
 import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
 import { autoUpdater } from 'electron-updater';
 

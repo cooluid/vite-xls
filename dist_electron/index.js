@@ -29,7 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path_1 = __importDefault(require("path"));
 const fs = __importStar(require("node:fs/promises"));
-const xlsx_1 = __importDefault(require("xlsx"));
+const xlsx = __importStar(require("xlsx"));
 const electron_updater_1 = require("electron-updater");
 async function createWindow() {
     const isDev = process.env.IS_DEV === "true";
@@ -100,7 +100,7 @@ function setupIpcHandlers(win) {
     });
     electron_1.ipcMain.handle("read-excel", async (event, filePath) => {
         try {
-            return xlsx_1.default.readFile(filePath);
+            return xlsx.readFile(filePath);
         }
         catch (e) {
             console.error(e);
@@ -143,4 +143,3 @@ electron_1.app.whenReady().then(async () => {
 electron_1.app.on('window-all-closed', () => {
     electron_1.app.quit();
 });
-//# sourceMappingURL=index.js.map

@@ -16,7 +16,7 @@
 		// 启用所有严格类型检查选项
 		"strict": true,
 		// 生成源映射文件，便于调试
-		"sourceMap": true,
+		// "sourceMap": true,
 		// 使用Node.js的模块解析策略
 		"moduleResolution": "Node",
 		// 包含node类型定义
