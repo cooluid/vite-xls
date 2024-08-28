@@ -28,12 +28,12 @@
 		"@vitejs/plugin-vue": "^5.1.2",
 		"concurrently": "^8.2.2",
 		"cross-env": "^7.0.3",
-		"electron": "^31.4.0",
+		"electron": "^32.0.1",
 		"electron-builder": "^24.13.3",
 		"typescript": "^5.5.3",
 		"vite": "^5.4.0",
 		"vue-tsc": "^2.0.29",
-		"wait-on": "^7.2.0"
+		"wait-on": "^8.0.0"
 	},
 	"build": {
 		"appId": "com.cool.uid",
