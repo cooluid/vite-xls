@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useXlsxStore } from "@/stores/xlsxStore";
-import { processAndExportData } from "@/utils/xlsxUtil";
+import { processAndExportData } from "@/utils/excelUtil";
 
 import { showNotification } from "@/utils/notification";
 

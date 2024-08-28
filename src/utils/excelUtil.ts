@@ -4,18 +4,7 @@ import { WorkBook, WorkSheet } from "xlsx";
 import { useXlsxStore } from "../stores/xlsxStore";
 
 // 类型定义
-type NotificationType = 'success' | 'error';
 type ParsedData = Record<string, Record<string, Record<string, any>>>;
-
-// 通用工具函数
-const showNotification = (message: string, type: NotificationType = 'success'): void => {
-  ElNotification({
-    title: '提示',
-    message,
-    type,
-    duration: 2000
-  });
-};
 
 const parseCell = (cellValue: any): any => {
   if (typeof cellValue !== "string") return cellValue;
