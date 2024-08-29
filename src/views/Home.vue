@@ -6,7 +6,7 @@
 					<div class="file-select-container">
 						<FileSelect v-model="importPath" :type="0" />
 					</div>
-					<FileList />
+					<FileList v-model="files" />
 				</el-col>
 				<el-col :span="12" class="right-col">
 					<ExportSettings />
@@ -19,26 +19,29 @@
 <script setup lang="ts">
 import ExportSettings from "@/components/ExportSettings/ExportSettings.vue";
 import FileList from "@/components/FileList/FileList.vue";
+import FileSelect from "@/components/FileList/FileSelect.vue";
 import MainLayout from "@/components/Layout/MainLayout.vue";
 import { useXlsxStore } from "@/stores/xlsxStore";
-import { computed, watchEffect } from "vue";
-import FileSelect from "@/components/FileList/FileSelect.vue";
-import { useLocalStorage } from "@/stores/xlsxStore";
-import { ref } from "vue";
+import { computed, watch } from "vue";
 
 const store = useXlsxStore();
-const importPath = ref<string>(store.xlsPath);
-watchEffect(async () => {
-	if (importPath.value) {
-		await store.getXlsxList();
-	}
+const files = computed({
+	get: () => store.xlsFileList || [],
+	set: (value) => store.xlsFileList = value,
 });
-computed({
+
+const importPath = computed({
 	get: () => store.xlsPath,
-	set: (value) => {
-		importPath.value = value;
-	},
+	set: (value) => store.setXlsPath(0, value),
 });
+
+watch(importPath, async () => {
+	if (importPath.value) {
+		files.value = await store.getXlsxList(importPath.value)
+	}
+}, { immediate: true });
+
+
 </script>
 
 <style scoped>
@@ -48,11 +51,8 @@ computed({
 }
 
 .el-row {
+	padding: 10px;
 	height: 100%;
 	background-color: beige;
-}
-
-.file-select-container {
-	width: 98%;
 }
 </style>

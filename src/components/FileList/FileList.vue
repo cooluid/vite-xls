@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useXlsxStore } from "@/stores/xlsxStore";
+import { useXlsxStore, XlsItem } from "@/stores/xlsxStore";
 import FileItem from "./FileItem.vue";
 
+const props = defineProps<{
+	modelValue: XlsItem[];
+}>();
+
 const store = useXlsxStore();
-const xlsFileItemList = computed(() => store.xlsxList);
+
+const xlsFileItemList = computed({
+	get: () => props.modelValue,
+	set: (itemList: XlsItem[]) => store.xlsFileList = itemList,
+});
 </script>
 
 <template>
 	<div class="m-list">
-		<FileItem
-			v-for="(item, index) in xlsFileItemList"
-			:key="item.name"
-			v-model="xlsFileItemList[index]"
-		>
+		<FileItem v-for="(item, index) in xlsFileItemList" :key="item.name" v-model="xlsFileItemList[index]">
 			{{ item.name }}
 		</FileItem>
 	</div>

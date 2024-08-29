@@ -8,7 +8,7 @@ import FileSelect from "../FileList/FileSelect.vue";
 import { ref } from "vue";
 
 const store = useXlsxStore();
-const exportPath = ref<string>(useLocalStorage("exportPath").get() || "");
+const exportPath = ref<string>(useLocalStorage("exportPath").get());
 
 const handleExport = async (type: number) => {
 	if (!exportPath.value) {
@@ -38,18 +38,10 @@ const handleExport = async (type: number) => {
 			</div>
 
 			<div class="grp-button">
-				<el-button
-					class="summit-button"
-					type="primary"
-					@click="handleExport(0)"
-				>
+				<el-button class="summit-button" type="primary" @click="handleExport(0)">
 					导出选中
 				</el-button>
-				<el-button
-					class="summit-button"
-					type="warning"
-					@click="handleExport(1)"
-				>
+				<el-button class="summit-button" type="warning" @click="handleExport(1)">
 					导出全部
 				</el-button>
 			</div>
@@ -59,6 +51,7 @@ const handleExport = async (type: number) => {
 
 <style scoped>
 .card-container {
+	width: 98%;
 	display: flex;
 	flex-direction: column;
 }

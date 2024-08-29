@@ -107,7 +107,8 @@ export const parseWorkbook = (workbookList: WorkBook[]): ParsedData | null => {
 // 文件读取和导出函数
 export const xlsRead = async (type: number): Promise<ParsedData | null> => {
   const store = useXlsxStore();
-  const selectedXls = type === 0 ? store.selectedXls : store.xlsxList;
+  const files = store.xlsFileList;
+  const selectedXls = type === 0 ? files.filter(file => file.isSelected) : files;
 
   const excelDataList = await Promise.all(
     selectedXls.map(xls => window.electronAPI.invoke("read-excel", `${store.xlsPath}/${xls.name}`))
