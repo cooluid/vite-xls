@@ -17,7 +17,7 @@ interface XlsxOptionsState {
   xlsxList: XlsItem[];
 }
 
-const useLocalStorage = (key: string) => ({
+export const useLocalStorage = (key: string) => ({
   get: () => localStorage.getItem(key),
   set: (value: string) => localStorage.setItem(key, value),
 });
@@ -32,13 +32,15 @@ export const useXlsxStore = defineStore("xlsxOptions", {
     xlsxList: [],
   }),
   actions: {
-    async setXlsPath(type: number): Promise<void> {
+    async setXlsPath(type: number): Promise<string> {
       const [path] = await window.electronAPI.invoke("dialog:openDirectory");
       const storageKey = type === 0 ? "importXlsPath" : "exportXlsPath";
       const stateProp = type === 0 ? "xlsPath" : "exportPath";
 
       this[stateProp] = path;
       useLocalStorage(storageKey).set(path);
+      console.log(path);
+      return path;
     },
 
     async getXlsxList(): Promise<XlsItem[]> {

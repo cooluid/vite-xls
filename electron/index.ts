@@ -25,7 +25,7 @@ async function createWindow() {
 function getWindowOptions(isDev: boolean): Electron.BrowserWindowConstructorOptions {
 	return {
 		width: 1000,
-		height: 800,
+		height: 600,
 		resizable: false,
 		fullscreenable: false,
 		maximizable: false,

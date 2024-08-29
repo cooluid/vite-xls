@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { useXlsxStore } from "@/stores/xlsxStore";
 import { processAndExportData } from "@/utils/excelUtil";
 
+import { useLocalStorage } from "@/stores/xlsxStore";
 import { showNotification } from "@/utils/notification";
+import FileSelect from "../FileList/FileSelect.vue";
+import { ref } from "vue";
 
 const store = useXlsxStore();
-const exportPath = computed(() => store.exportPath);
-
-const handleExportPathClick = () => store.setXlsPath(1);
+const exportPath = ref<string>(useLocalStorage("exportPath").get() || "");
 
 const handleExport = async (type: number) => {
-	if (!store.exportPath) {
+	if (!exportPath.value) {
 		showNotification("请选择导出路径", "warning");
 		return;
 	}
 
 	try {
-		await processAndExportData(type, store.exportPath);
+		await processAndExportData(type, exportPath.value);
 		showNotification("导出成功", "success");
 	} catch (error) {
 		showNotification((error as Error).message, "error");
@@ -28,22 +28,28 @@ const handleExport = async (type: number) => {
 <template>
 	<el-card class="card-container">
 		<template #header>导出设置</template>
-		<div class="m-path-select2">
-			<el-input v-model="exportPath" placeholder="导出路径" style="width: 80%" />
-			<el-button type="primary" @click="handleExportPathClick">
-				选择
-			</el-button>
-		</div>
+
+		<FileSelect v-model="exportPath" :type="1" />
+
 		<div class="set-info">
-			<div class="m-switch">
+			<div class="switch">
 				<el-switch v-model="store.exportType" active-text="导出JSON" />
 				<el-switch v-model="store.exportType" active-text="导出AMF" />
 			</div>
+
 			<div class="grp-button">
-				<el-button class="summit-button" type="primary" @click="handleExport(0)">
+				<el-button
+					class="summit-button"
+					type="primary"
+					@click="handleExport(0)"
+				>
 					导出选中
 				</el-button>
-				<el-button class="summit-button" type="warning" @click="handleExport(1)">
+				<el-button
+					class="summit-button"
+					type="warning"
+					@click="handleExport(1)"
+				>
 					导出全部
 				</el-button>
 			</div>
@@ -52,5 +58,31 @@ const handleExport = async (type: number) => {
 </template>
 
 <style scoped>
-/* ... 保留原有样式 ... */
+.card-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.switch {
+	display: flex;
+	gap: 20px;
+}
+
+.set-info {
+	padding-top: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.grp-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 80px;
+}
+
+.summit-button {
+	width: 150px;
+}
 </style>
