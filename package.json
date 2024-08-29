@@ -15,15 +15,23 @@
 		"start:debug": "cross-env VSCODE_DEBUG=true electron --remote-debugging-port=9223 .",
 		"postinstall": "electron-builder install-app-deps",
 		"pack:mac": "run-s build && electron-builder --mac",
-		"prebuild": "yarn clean"
+		"prebuild": "yarn clean",
+		"version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+		"release": "standard-version",
+		"lint": "eslint . --ext .js,.ts,.vue",
+		"test": "jest",
+		"prepare": "husky install"
 	},
 	"dependencies": {
 		"animejs": "^3.2.2",
 		"electron-updater": "^6.2.1",
 		"element-plus": "^2.8.0",
 		"pinia": "^2.2.2",
-		"vue": "^3.4.35",
 		"xlsx": "^0.18.5"
+	},
+	"peerDependencies": {
+		"vue": "^3.4.35",
+		"electron": "^32.0.1"
 	},
 	"devDependencies": {
 		"@electron/packager": "^18.3.4",
@@ -39,6 +47,24 @@
 		"vite": "^5.4.0",
 		"vite-plugin-electron": "^0.28.7",
 		"vue-tsc": "^2.0.29",
-		"wait-on": "^8.0.0"
-	}
+		"wait-on": "^8.0.0",
+		"conventional-changelog-cli": "^2.2.2",
+		"standard-version": "^9.3.2"
+	},
+	"engines": {
+		"node": ">=14.0.0"
+	},
+	"description": "一个基于Electron和Vue的Excel处理应用",
+	"author": "您的名字 <your.email@example.com>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yourusername/vite-xls.git"
+	},
+	"keywords": [
+		"electron",
+		"vue",
+		"excel",
+		"spreadsheet"
+	]
 }
