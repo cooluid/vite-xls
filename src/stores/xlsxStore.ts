@@ -39,25 +39,29 @@ export const useXlsxStore = defineStore("xlsxOptions", {
 
       this[stateProp] = path;
       useLocalStorage(storageKey).set(path);
-      console.log(path);
+      console.log("path", path);
       return path;
     },
 
     async getXlsxList(): Promise<XlsItem[]> {
+      if (!this.xlsPath) {
+        console.warn("xlsPath 未设置");
+        return [];
+      }
+
       try {
         const allFiles: string[] = await window.electronAPI.invoke("get-files-in-directory", this.xlsPath);
         this.xlsxList = allFiles
-          .filter(file => /\.(xlsx|xls)$/.test(file))
-          .map((name, index) => ({ path: this.xlsPath, index, name, isSelected: false }));
+          .filter(file => /\.(xlsx|xls)$/i.test(file))
+          .map((name, index) => ({
+            path: this.xlsPath,
+            index,
+            name,
+            isSelected: false
+          }));
         return this.xlsxList;
-
-      } catch (e: any) {
-        console.error(e);
-        ElNotification({
-          title: "错误",
-          message: `获取目录文件失败: ${e.message}`,
-          type: "error",
-        });
+      } catch (error) {
+        console.error("获取 Excel 文件列表时出错:", error);
         return [];
       }
     },
