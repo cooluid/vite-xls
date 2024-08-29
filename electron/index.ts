@@ -1,9 +1,8 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
-import path from 'path'
-import * as fs from "node:fs/promises"
-import * as xlsx from 'xlsx'
-import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
+import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import * as fs from "node:fs/promises";
+import path from 'path';
+import * as xlsx from 'xlsx';
 
 async function createWindow() {
 	const isDev = process.env.IS_DEV === "true";
@@ -57,7 +56,6 @@ async function loadDevServer(win: BrowserWindow, retryCount = 0) {
 }
 
 function setupIpcHandlers(win: BrowserWindow) {
-	console.log("setupIpcHandlers");
 	ipcMain.handle("dialog:openDirectory", async () => {
 		const result = await dialog.showOpenDialog(win, { properties: ['openDirectory'] });
 		return result.filePaths;
@@ -112,13 +110,7 @@ function setupIpcHandlers(win: BrowserWindow) {
 }
 
 app.whenReady().then(async () => {
-	// 创建windows应用
 	await createWindow();
-	app.on('activate', async function () {
-		if (BrowserWindow.getAllWindows().length === 0) {
-			await createWindow();
-		}
-	});
 	autoUpdater.checkForUpdatesAndNotify();
 });
 

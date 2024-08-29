@@ -27,10 +27,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-const path_1 = __importDefault(require("path"));
-const fs = __importStar(require("node:fs/promises"));
-const xlsx = __importStar(require("xlsx"));
 const electron_updater_1 = require("electron-updater");
+const fs = __importStar(require("node:fs/promises"));
+const path_1 = __importDefault(require("path"));
+const xlsx = __importStar(require("xlsx"));
 async function createWindow() {
     const isDev = process.env.IS_DEV === "true";
     console.log("isDEV", isDev);
@@ -80,7 +80,6 @@ async function loadDevServer(win, retryCount = 0) {
     }
 }
 function setupIpcHandlers(win) {
-    console.log("setupIpcHandlers");
     electron_1.ipcMain.handle("dialog:openDirectory", async () => {
         const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openDirectory'] });
         return result.filePaths;
@@ -131,13 +130,7 @@ function setupIpcHandlers(win) {
     });
 }
 electron_1.app.whenReady().then(async () => {
-    // 创建windows应用
     await createWindow();
-    electron_1.app.on('activate', async function () {
-        if (electron_1.BrowserWindow.getAllWindows().length === 0) {
-            await createWindow();
-        }
-    });
     electron_updater_1.autoUpdater.checkForUpdatesAndNotify();
 });
 electron_1.app.on('window-all-closed', () => {
