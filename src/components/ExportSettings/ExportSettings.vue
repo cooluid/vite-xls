@@ -2,13 +2,12 @@
 import { useXlsxStore } from "@/stores/xlsxStore";
 import { processAndExportData } from "@/utils/excelUtil";
 
-import { useLocalStorage } from "@/stores/xlsxStore";
 import { showNotification } from "@/utils/notification";
-import FileSelect from "../FileList/FileSelect.vue";
 import { ref } from "vue";
+import FileSelect from "../FileList/FileSelect.vue";
 
 const store = useXlsxStore();
-const exportPath = ref<string>(useLocalStorage("exportPath").get());
+const exportPath = ref<string>(store.exportPath);
 
 const handleExport = async (type: number) => {
 	if (!exportPath.value) {

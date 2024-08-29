@@ -16,7 +16,7 @@ interface XlsxOptionsState {
 	xlsFileList: XlsItem[];
 }
 
-export const useLocalStorage = (key: string) => ({
+const useLocalStorage = (key: string) => ({
 	get: () => localStorage.getItem(key) || "",
 	set: (value: string) => localStorage.setItem(key, value),
 });
