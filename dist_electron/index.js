@@ -48,13 +48,12 @@ async function createWindow() {
 }
 function getWindowOptions(isDev) {
     return {
-        width: 1000,
+        width: 800,
         height: 600,
         resizable: false,
         fullscreenable: false,
         maximizable: false,
         movable: true,
-        frame: false,
         webPreferences: {
             devTools: isDev,
             contextIsolation: true,

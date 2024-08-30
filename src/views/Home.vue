@@ -63,7 +63,7 @@ watch(importPath, async () => {
 .el-row {
 	padding: 10px;
 	height: 100%;
-	background-color: beige;
+	background-color: #F5F5DC;
 }
 
 .r-col {
