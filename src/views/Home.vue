@@ -13,7 +13,7 @@
 						<LogView :list="logList" />
 					</div>
 					<div class="export-settings-container">
-						<ExportSettings />˝
+						<ExportSettings />
 					</div>
 				</el-col>
 			</el-row>

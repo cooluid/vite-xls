@@ -56,7 +56,7 @@ const parseComplexWorksheet = (worksheet: WorkSheet, maxRow: number, maxCol: num
     defval: ''
   };
   const [headers, , ...rows] = xlsx.utils.sheet_to_json(worksheet, options) as any[][];
-
+  const logStore = useLogStore();
   return rows.reduce((acc, row) => {
     const keys = row.slice(0, keyCount);
     const values = row.slice(keyCount);
@@ -64,7 +64,7 @@ const parseComplexWorksheet = (worksheet: WorkSheet, maxRow: number, maxCol: num
     let currentLevel = acc;
     keys.forEach((key, index) => {
       if (!key) {
-        console.warn(`在第 ${index + 1} 列找不到有效的键名`);
+        logStore.add({ mssage: `在第 ${index + 1} 列找不到有效的键名`, type: 'error' });
         return;
       }
 
