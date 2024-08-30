@@ -2,6 +2,7 @@ import { ElNotification } from "element-plus";
 import * as xlsx from "xlsx";
 import { WorkBook, WorkSheet } from "xlsx";
 import { useXlsxStore } from "../stores/xlsxStore";
+import { useLogStore } from "@/stores/logStore";
 
 // 类型定义
 type ParsedData = Record<string, Record<string, Record<string, any>>>;
@@ -91,13 +92,14 @@ export const parseWorkbook = (workbookList: WorkBook[]): ParsedData | null => {
   if (!workbookList.length) {
     return null;
   }
-
+  const logStore = useLogStore();
   return workbookList.reduce((acc, workbook) => {
     workbook.SheetNames.forEach(sheetName => {
       const worksheet = workbook.Sheets[sheetName];
       const titleCell = worksheet[xlsx.utils.encode_cell({ r: 0, c: 0 })];
       if (titleCell) {
         acc[titleCell.v] = parseWorksheet(worksheet);
+        logStore.add({ mssage: `正在解析 ${titleCell.v}`, type: 'info' });
       }
     });
     return acc;
@@ -106,10 +108,12 @@ export const parseWorkbook = (workbookList: WorkBook[]): ParsedData | null => {
 
 // 文件读取和导出函数
 export const xlsRead = async (type: number): Promise<ParsedData | null> => {
+  const logStore = useLogStore();
   const store = useXlsxStore();
   const files = store.xlsFileList;
   const selectedXls = type === 0 ? files.filter(file => file.isSelected) : files;
 
+  logStore.add({ mssage: '正在读取数据', type: 'info' });
   const excelDataList = await Promise.all(
     selectedXls.map(xls => window.electronAPI.invoke("read-excel", `${store.xlsPath}/${xls.name}`))
   );
@@ -119,15 +123,20 @@ export const xlsRead = async (type: number): Promise<ParsedData | null> => {
 
 export const processAndExportData = async (type: number, exportPath: string): Promise<void> => {
   const data = await xlsRead(type);
+  const logStore = useLogStore();
+
   if (!data) {
+    logStore.add({ mssage: '无效的数据格式', type: 'error' });
     throw new Error('无效的数据格式');
   }
 
   await Promise.all(
     Object.entries(data).map(async ([configName, configData]) => {
       const fileName = `${configName}.json`;
+      logStore.add({ mssage: `正在处理 ${fileName}`, type: 'info' });
       const filePath = await window.electronAPI.invoke("join-paths", exportPath, fileName);
       await window.electronAPI.invoke("write-file", filePath, JSON.stringify(configData, null, 2));
+      logStore.add({ mssage: `已导出文件：${fileName}`, type: 'success' });
     })
   );
 };
