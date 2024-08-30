@@ -107,6 +107,10 @@ function setupIpcHandlers(win: BrowserWindow) {
 			throw error;
 		}
 	});
+
+	ipcMain.handle('close-app', () => {
+		app.quit();
+	});
 }
 
 app.whenReady().then(async () => {

@@ -1,7 +1,8 @@
 <template>
     <div class="log-item">
-        <div :class="['log-item-header', `log-item-header-${logItem.type}`]">
-            <span class="log-item-info">{{ logItem.mssage }}</span>
+        <div :class="['log-item-header', `log-item-header-${logItem.type}`, 'log-item-info']">
+            <span>{{ logItem.time }}：</span>
+            <span>{{ logItem.mssage }}</span>
         </div>
     </div>
 </template>
@@ -15,7 +16,6 @@ const props = defineProps<{
 const logItem = computed(() => props.item);
 </script>
 <style scoped>
-
 .log-item-header-success {
     color: forestgreen;
 }
@@ -28,7 +28,12 @@ const logItem = computed(() => props.item);
     color: #f40808;
 }
 
+.log-item-header:hover {
+    background-color: #dce3af;
+}
+
 .log-item-info {
+    transition: background-color 0.2s ease;
     text-align: left;
     font-size: 12px;
 }

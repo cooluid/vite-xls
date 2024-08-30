@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 export interface LogEntry {
     mssage: string,
-    type: 'info' | 'success' | 'warning' | 'error'
+    type: 'info' | 'success' | 'warning' | 'error',
+    time?: string
 }
 export const useLogStore = defineStore('log', {
     state: () => ({
@@ -9,7 +10,8 @@ export const useLogStore = defineStore('log', {
     }),
     actions: {
         add(msgItem: LogEntry): void {
-            this.logList.push(msgItem);
+            const time = new Date().toLocaleTimeString();
+            this.logList.push({ ...msgItem, time });
         },
 
         clear(): void {

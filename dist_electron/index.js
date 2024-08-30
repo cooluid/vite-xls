@@ -128,6 +128,9 @@ function setupIpcHandlers(win) {
             throw error;
         }
     });
+    electron_1.ipcMain.handle('close-app', () => {
+        electron_1.app.quit();
+    });
 }
 electron_1.app.whenReady().then(async () => {
     await createWindow();

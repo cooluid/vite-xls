@@ -4,7 +4,7 @@ const electron_1 = require("electron");
 // 创建 ElectronAPI 对象
 const electronAPI = {
     invoke: async (channel, ...args) => {
-        console.log(`调用异步操作: ${channel}`, ...args);
+        // console.log(`调用异步操作: ${channel}`, ...args);
         return await electron_1.ipcRenderer.invoke(channel, ...args);
     },
 };

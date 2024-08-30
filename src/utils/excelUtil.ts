@@ -132,11 +132,13 @@ export const processAndExportData = async (type: number, exportPath: string): Pr
 
   await Promise.all(
     Object.entries(data).map(async ([configName, configData]) => {
+
       const fileName = `${configName}.json`;
       logStore.add({ mssage: `正在处理 ${fileName}`, type: 'info' });
       const filePath = await window.electronAPI.invoke("join-paths", exportPath, fileName);
       await window.electronAPI.invoke("write-file", filePath, JSON.stringify(configData, null, 2));
       logStore.add({ mssage: `已导出文件：${fileName}`, type: 'success' });
+      
     })
   );
 };

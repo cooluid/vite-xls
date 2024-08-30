@@ -11,7 +11,7 @@ interface ElectronAPI {
 // 创建 ElectronAPI 对象
 const electronAPI: ElectronAPI = {
 	invoke: async (channel, ...args) => {
-		console.log(`调用异步操作: ${channel}`, ...args);
+		// console.log(`调用异步操作: ${channel}`, ...args);
 		return await ipcRenderer.invoke(channel, ...args);
 	},
 };

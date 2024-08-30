@@ -47,7 +47,6 @@ const importPath = computed({
 
 watch(importPath, async () => {
 	if (importPath.value) {
-		console.log(importPath.value);
 		files.value = await store.getXlsxList(importPath.value);
 	}
 }, { immediate: true });
