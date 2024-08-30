@@ -80,6 +80,12 @@ const handleExport = async (type: number) => {
 	align-items: center;
 }
 
+.grp-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .summit-button {
 	width: 150px;
 }
