@@ -12,6 +12,11 @@ const exportPath = computed({
 	set: (value) => store.setXlsPath(1, value)
 });
 
+const exportFormat = computed({
+	get: () => store.exportFormat,
+	set: (value: 'JSON' | 'AMF') => store.setExportFormat(value)
+});
+
 const handleExport = async (type: number) => {
 	if (!exportPath.value) {
 		showNotification("请选择导出路径", "warning");
@@ -33,10 +38,10 @@ const handleExport = async (type: number) => {
 		<FileSelect v-model="exportPath" :type="1" />
 
 		<div class="set-info">
-			<div class="switch">
-				<el-switch v-model="store.exportType" active-text="导出JSON" />
-				<el-switch v-model="store.exportType" active-text="导出AMF" />
-			</div>
+			<el-radio-group v-model="exportFormat">
+				<el-radio label="JSON">导出JSON</el-radio>
+				<el-radio label="AMF">导出AMF</el-radio>
+			</el-radio-group>
 
 			<div class="grp-button">
 				<el-button class="summit-button" type="primary" @click="handleExport(0)">
@@ -69,11 +74,10 @@ const handleExport = async (type: number) => {
 	gap: 5px;
 }
 
-.grp-button {
+.el-radio-group {
 	display: flex;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
-	gap: 80px;
 }
 
 .summit-button {

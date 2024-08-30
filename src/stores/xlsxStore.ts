@@ -10,7 +10,7 @@ export interface XlsItem {
 interface XlsxOptionsState {
 	xlsPath: string;
 	exportPath: string;
-	exportType: number;
+	exportFormat: 'JSON' | 'AMF';
 	exportDataType: number;
 	xlsFileList: XlsItem[];
 }
@@ -24,7 +24,7 @@ export const useXlsxStore = defineStore("xlsxOptions", {
 	state: (): XlsxOptionsState => ({
 		xlsPath: useLocalStorage("importXlsPath").get(),
 		exportPath: useLocalStorage("exportXlsPath").get(),
-		exportType: 0,
+		exportFormat: useLocalStorage("exportFormat").get() as 'JSON',
 		exportDataType: Number(useLocalStorage("exportDataType").get()) || 0,
 		xlsFileList: [] as XlsItem[]
 	}),
@@ -59,9 +59,9 @@ export const useXlsxStore = defineStore("xlsxOptions", {
 			}
 		},
 
-		setExportDataType(exportDataType: number) {
-			this.exportDataType = exportDataType;
-			useLocalStorage("exportDataType").set(exportDataType.toString());
+		setExportFormat(exportFormat: 'JSON' | 'AMF') {
+			this.exportFormat = exportFormat;
+			useLocalStorage("exportFormat").set(exportFormat);
 		},
 	},
 });
