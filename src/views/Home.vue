@@ -8,8 +8,9 @@
 					</div>
 					<FileList v-model="files" />
 				</el-col>
-				<el-col :span="12" class="right-col">
-					<ExportSettings />
+				<el-col :span="12" class="r-col">
+					<LogView class="log-view" />
+					<ExportSettings class="export-settings-container" />
 				</el-col>
 			</el-row>
 		</div>
@@ -23,7 +24,7 @@ import FileSelect from "@/components/FileList/FileSelect.vue";
 import MainLayout from "@/components/Layout/MainLayout.vue";
 import { useXlsxStore } from "@/stores/xlsxStore";
 import { computed, watch } from "vue";
-
+import LogView from "@/components/Log/LogView.vue";
 const store = useXlsxStore();
 const files = computed({
 	get: () => store.xlsFileList || [],
@@ -37,7 +38,8 @@ const importPath = computed({
 
 watch(importPath, async () => {
 	if (importPath.value) {
-		files.value = await store.getXlsxList(importPath.value)
+		console.log(importPath.value);
+		files.value = await store.getXlsxList(importPath.value);
 	}
 }, { immediate: true });
 
@@ -54,5 +56,20 @@ watch(importPath, async () => {
 	padding: 10px;
 	height: 100%;
 	background-color: beige;
+}
+
+.r-col {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.log-view {
+	flex: 7
+}
+
+.export-settings-container {
+	flex: 3;
 }
 </style>

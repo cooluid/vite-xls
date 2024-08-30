@@ -1,6 +1,6 @@
 <template>
 	<header class="m-title">
-		<h1>表格转换工具</h1>
+		<h2>表格转换工具</h2>
 	</header>
 </template>
 

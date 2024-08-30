@@ -26,7 +26,6 @@ const handleExport = async (type: number) => {
 
 <template>
 	<el-card class="card-container">
-		<template #header>导出设置</template>
 
 		<FileSelect v-model="exportPath" :type="1" />
 
@@ -50,7 +49,7 @@ const handleExport = async (type: number) => {
 
 <style scoped>
 .card-container {
-	width: 98%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 }
@@ -61,7 +60,7 @@ const handleExport = async (type: number) => {
 }
 
 .set-info {
-	padding-top: 20px;
+	padding-top: 10px;
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
