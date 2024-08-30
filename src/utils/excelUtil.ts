@@ -135,10 +135,14 @@ export const processAndExportData = async (type: number, exportPath: string): Pr
 
       const fileName = `${configName}.json`;
       logStore.add({ mssage: `正在处理 ${fileName}`, type: 'info' });
-      const filePath = await window.electronAPI.invoke("join-paths", exportPath, fileName);
-      await window.electronAPI.invoke("write-file", filePath, JSON.stringify(configData, null, 2));
-      logStore.add({ mssage: `已导出文件：${fileName}`, type: 'success' });
-      
+      try {
+        const filePath = await window.electronAPI.invoke("join-paths", exportPath, fileName);
+        await window.electronAPI.invoke("write-file", filePath, JSON.stringify(configData, null, 2));
+        logStore.add({ mssage: `已导出文件：${fileName}`, type: 'success' });
+
+      } catch (error) {
+        logStore.add({ mssage: (error as Error).message, type: 'error' });
+      }
     })
   );
 };

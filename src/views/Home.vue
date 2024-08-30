@@ -41,7 +41,7 @@ const files = computed({
 const logList = computed(() => logStore.logList);
 
 const importPath = computed({
-	get: () => store.xlsPath,
+	get: () => store.xlsPath || "",
 	set: (value) => store.setXlsPath(0, value),
 });
 
