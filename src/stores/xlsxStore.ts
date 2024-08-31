@@ -5,6 +5,7 @@ export interface XlsItem {
 	index: number;
 	name: string;
 	isSelected: boolean;
+	firstLetter: string
 }
 
 interface XlsxOptionsState {
@@ -50,7 +51,8 @@ export const useXlsxStore = defineStore("xlsxOptions", {
 						path: this.xlsPath,
 						index,
 						name,
-						isSelected: false
+						isSelected: false,
+						firstLetter: ""
 					}));
 
 			} catch (error) {

@@ -29,16 +29,15 @@ const isSelected = computed({
 
 <style scoped>
 .list-item {
-	width: 98%;
+	margin-right: 10px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	font-size: 16px;
+	font-size: 14px;
 	text-align: left;
-	border-bottom: 1px dashed #000;
+	border-bottom: 1px dashed #0000005b;
 	transition: background-color 0.2s ease;
 	cursor: pointer;
-	box-sizing: border-box;
 }
 
 .list-item:hover {
