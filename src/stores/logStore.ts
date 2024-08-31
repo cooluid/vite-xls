@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 export interface LogEntry {
-    mssage: string,
+    message: string,
     type: 'info' | 'success' | 'warning' | 'error',
     time?: string,
     path?: string

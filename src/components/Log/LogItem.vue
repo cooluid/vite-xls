@@ -3,7 +3,7 @@
         <div :class="['log-item-header', `log-item-header-${logItem.type}`, 'log-item-info']">
             <span>{{ logItem.time }}：</span>
             <span :class="{ 'log-item-message-success': logItem.type === 'success' }" @click="handleClick">{{
-                logItem.mssage }}</span>
+                logItem.message }}</span>
         </div>
     </div>
 </template>
