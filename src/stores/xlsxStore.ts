@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { useLocalStorage } from "../utils/commonUtil";
+import { StorageKey } from "../utils/commonUtil";
 
 export interface XlsItem {
 	path: string;
@@ -9,30 +11,25 @@ export interface XlsItem {
 }
 
 interface XlsxOptionsState {
-	xlsPath: string;
+	importPath: string;
 	exportPath: string;
 	exportFormat: string;
 	exportDataType: number;
 	xlsFileList: XlsItem[];
 }
 
-const useLocalStorage = (key: string) => ({
-	get: () => localStorage.getItem(key) || "",
-	set: (value: string) => localStorage.setItem(key, value),
-});
-
 export const useXlsxStore = defineStore("xlsxOptions", {
 	state: (): XlsxOptionsState => ({
-		xlsPath: useLocalStorage("importXlsPath").get(),
-		exportPath: useLocalStorage("exportXlsPath").get(),
-		exportFormat: useLocalStorage("exportFormat").get() as 'JSON',
-		exportDataType: Number(useLocalStorage("exportDataType").get()) || 0,
+		importPath: useLocalStorage(StorageKey.ImportPath).get(),
+		exportPath: useLocalStorage(StorageKey.ExportPath).get(),
+		exportFormat: useLocalStorage(StorageKey.ExportFormat).get() as 'JSON',
+		exportDataType: Number(useLocalStorage(StorageKey.ExportDataType).get()) || 0,
 		xlsFileList: [] as XlsItem[]
 	}),
 	actions: {
-		setXlsPath(type: number, path: string): void {
-			const storageKey = type === 0 ? "importXlsPath" : "exportXlsPath";
-			const stateProp = type === 0 ? "xlsPath" : "exportPath";
+		setPath(type: number, path: string): void {
+			const storageKey = type === 0 ? StorageKey.ImportPath : StorageKey.ExportPath;
+			const stateProp = type === 0 ? "importPath" : "exportPath";
 
 			this[stateProp] = path;
 			useLocalStorage(storageKey).set(path);
@@ -48,7 +45,7 @@ export const useXlsxStore = defineStore("xlsxOptions", {
 				return allFiles
 					.filter(file => /\.(xlsx|xls)$/i.test(file))
 					.map((name, index) => ({
-						path: this.xlsPath,
+						path: this.importPath,
 						index,
 						name,
 						isSelected: false,
@@ -63,7 +60,7 @@ export const useXlsxStore = defineStore("xlsxOptions", {
 
 		setExportFormat(exportFormat: string) {
 			this.exportFormat = exportFormat;
-			useLocalStorage("exportFormat").set(exportFormat);
+			useLocalStorage(StorageKey.ExportFormat).set(exportFormat);
 		},
 	},
 });

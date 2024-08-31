@@ -121,7 +121,7 @@ export const xlsRead = async (type: number): Promise<ParsedData | null> => {
 
   addLog('正在读取数据...', 'info');
   const excelDataList = await Promise.all(
-    selectedXls.map(xls => window.electronAPI.invoke("read-excel", `${store.xlsPath}/${xls.name}`))
+    selectedXls.map(xls => window.electronAPI.invoke("read-excel", `${store.importPath}/${xls.name}`))
   );
 
   return parseWorkbook(excelDataList);

@@ -35,17 +35,8 @@ const isSelected = computed({
 	white-space: nowrap;
 	font-size: 14px;
 	text-align: left;
-	border-bottom: 1px dashed #0000005b;
-	transition: background-color 0.2s ease;
+	border-bottom: 1px dashed var(--el-border-color-lighter);
 	cursor: pointer;
-}
-
-.list-item:hover {
-	background-color: #f5f5f5;
-}
-
-.list-item.selected {
-	background-color: #c6e2ff;
 }
 
 .full-width {

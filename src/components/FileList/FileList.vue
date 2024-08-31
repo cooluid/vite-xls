@@ -54,5 +54,6 @@ const getFirstLetter = (str: string) => pinyin(str, { pattern: 'first', toneType
 .first-letter {
 	text-align: center;
 	font-weight: bold;
+	color: var(--el-text-color-primary);
 }
 </style>

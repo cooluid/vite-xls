@@ -8,7 +8,7 @@ import FileSelect from "../FileList/FileSelect.vue";
 const store = useXlsxStore();
 const exportPath = computed({
 	get: () => store.exportPath || "",
-	set: (value) => store.setXlsPath(1, value)
+	set: (value) => store.setPath(1, value)
 });
 
 const exportFormat = computed({

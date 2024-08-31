@@ -41,8 +41,8 @@ const files = computed({
 const logList = computed(() => logStore.logList);
 
 const importPath = computed({
-	get: () => store.xlsPath || "",
-	set: (value) => store.setXlsPath(0, value),
+	get: () => store.importPath || "",
+	set: (value) => store.setPath(0, value),
 });
 
 watch(importPath, async () => {
@@ -63,7 +63,7 @@ watch(importPath, async () => {
 .el-row {
 	padding: 10px;
 	height: 100%;
-	background-color: #F5F5DC;
+	background-color: var(--el-bg-color);
 }
 
 .r-col {
@@ -77,9 +77,12 @@ watch(importPath, async () => {
 	flex: 1;
 	overflow-y: auto;
 	min-height: 0;
+	padding: 10px;
+	border: 1px solid var(--el-border-color-lighter);
+	border-radius: 10px;
 }
 
 .export-settings-container {
-	min-height: 50px;
+	min-height: 40px;
 }
 </style>
