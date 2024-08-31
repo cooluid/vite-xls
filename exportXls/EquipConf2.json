@@ -1,0 +1,83 @@
+{
+  "1": {
+    "type": 0,
+    "award": [
+      {
+        "id": 100,
+        "type": 0,
+        "count": 99
+      },
+      {
+        "id": 200,
+        "type": 0,
+        "count": 1000
+      },
+      {
+        "id": 1000,
+        "type": 1,
+        "count": 1
+      }
+    ],
+    "posList": [
+      1,
+      2
+    ],
+    "params": {
+      "ext": 99
+    }
+  },
+  "2": {
+    "type": 1,
+    "award": [
+      {
+        "id": 100,
+        "type": 0,
+        "count": 99
+      },
+      {
+        "id": 200,
+        "type": 0,
+        "count": 1000
+      },
+      {
+        "id": 1000,
+        "type": 1,
+        "count": 1
+      }
+    ],
+    "posList": [
+      3,
+      4
+    ],
+    "params": {
+      "ext": 99
+    }
+  },
+  "3": {
+    "type": 2,
+    "award": [
+      {
+        "id": 100,
+        "type": 0,
+        "count": 99
+      },
+      {
+        "id": 200,
+        "type": 0,
+        "count": 1000
+      },
+      {
+        "id": 1000,
+        "type": 1,
+        "count": 1
+      }
+    ],
+    "posList": [
+      5,
+      6
+    ],
+    "params": {
+      "ext": 99
+    }
+  }
+}

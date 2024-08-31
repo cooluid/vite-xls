@@ -1,0 +1,266 @@
+{
+  "100": {
+    "1": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    },
+    "2": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    },
+    "3": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    },
+    "4": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    },
+    "5": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    }
+  },
+  "300": {
+    "1": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    },
+    "2": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    },
+    "3": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    },
+    "4": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    },
+    "5": {
+      "award": [
+        {
+          "id": 100,
+          "type": 0,
+          "count": 99
+        },
+        {
+          "id": 200,
+          "type": 0,
+          "count": 1000
+        },
+        {
+          "id": 1000,
+          "type": 1,
+          "count": 1
+        }
+      ],
+      "posList": [
+        1,
+        2
+      ],
+      "params": {
+        "ext": 99
+      }
+    }
+  }
+}
