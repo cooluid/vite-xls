@@ -31,6 +31,7 @@ const electron_updater_1 = require("electron-updater");
 const fs = __importStar(require("node:fs/promises"));
 const path_1 = __importDefault(require("path"));
 const xlsx = __importStar(require("xlsx"));
+const electron_2 = require("electron");
 async function createWindow() {
     const isDev = process.env.IS_DEV === "true";
     console.log("isDEV", isDev);
@@ -113,6 +114,11 @@ function setupIpcHandlers(win) {
         catch (error) {
             console.error('读取目录失败:', error);
             throw error;
+        }
+    });
+    electron_1.ipcMain.handle('show-item-in-folder', async (event, filePath) => {
+        if (filePath) {
+            await electron_2.shell.showItemInFolder(path_1.default.normalize(filePath));
         }
     });
     electron_1.ipcMain.handle('join-paths', (event, ...paths) => {

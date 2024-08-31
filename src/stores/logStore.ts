@@ -2,7 +2,8 @@ import { defineStore } from "pinia";
 export interface LogEntry {
     mssage: string,
     type: 'info' | 'success' | 'warning' | 'error',
-    time?: string
+    time?: string,
+    path?: string
 }
 export const useLogStore = defineStore('log', {
     state: () => ({

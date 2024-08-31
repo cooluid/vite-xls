@@ -3,6 +3,7 @@ import { autoUpdater } from 'electron-updater';
 import * as fs from "node:fs/promises";
 import path from 'path';
 import * as xlsx from 'xlsx';
+import { shell } from 'electron';
 
 async function createWindow() {
 	const isDev = process.env.IS_DEV === "true";
@@ -91,6 +92,12 @@ function setupIpcHandlers(win: BrowserWindow) {
 		} catch (error) {
 			console.error('读取目录失败:', error);
 			throw error;
+		}
+	});
+
+	ipcMain.handle('show-item-in-folder', async (event, filePath) => {
+		if (filePath) {
+			await shell.showItemInFolder(path.normalize(filePath));
 		}
 	});
 

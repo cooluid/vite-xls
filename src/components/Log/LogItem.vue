@@ -2,7 +2,8 @@
     <div class="log-item">
         <div :class="['log-item-header', `log-item-header-${logItem.type}`, 'log-item-info']">
             <span>{{ logItem.time }}：</span>
-            <span>{{ logItem.mssage }}</span>
+            <span :class="{ 'log-item-message-success': logItem.type === 'success' }" @click="handleClick">{{
+                logItem.mssage }}</span>
         </div>
     </div>
 </template>
@@ -14,10 +15,21 @@ const props = defineProps<{
 }>();
 
 const logItem = computed(() => props.item);
+
+const handleClick = () => {
+    if (logItem.value.type === 'success') {
+        window.electronAPI.invoke('show-item-in-folder', logItem.value.path);
+    }
+}
 </script>
 <style scoped>
 .log-item-header-success {
     color: forestgreen;
+}
+
+.log-item-message-success {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .log-item-header-warning {
