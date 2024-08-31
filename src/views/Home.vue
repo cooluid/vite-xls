@@ -73,6 +73,7 @@ watch(importPath, async () => {
 }
 
 .list-container {
+	position: relative;
 	flex: 1;
 	overflow-y: auto;
 	min-height: 0;
