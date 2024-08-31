@@ -1,5 +1,5 @@
 appId: com.cooluid.app
-productName: vite-xls
+productName: 导表工具
 directories:
   output: release/${version}
   buildResources: build

@@ -74,6 +74,14 @@ button:focus-visible {
     padding: 2em;
 }
 
+.icon {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         color: #213547;
@@ -87,4 +95,5 @@ button:focus-visible {
     button {
         background-color: #f9f9f9;
     }
+
 }

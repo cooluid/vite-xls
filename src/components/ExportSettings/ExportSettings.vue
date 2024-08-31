@@ -2,10 +2,9 @@
 import { useXlsxStore } from "@/stores/xlsxStore";
 import { processAndExportData } from "@/utils/excelUtil";
 
-import { showNotification } from "@/utils/notification";
+import { ElMessage } from "element-plus";
 import { computed } from "vue";
 import FileSelect from "../FileList/FileSelect.vue";
-
 const store = useXlsxStore();
 const exportPath = computed({
 	get: () => store.exportPath || "",
@@ -14,20 +13,20 @@ const exportPath = computed({
 
 const exportFormat = computed({
 	get: () => store.exportFormat,
-	set: (value: 'JSON' | 'AMF') => store.setExportFormat(value)
+	set: (value: string) => store.setExportFormat(value)
 });
 
 const handleExport = async (type: number) => {
 	if (!exportPath.value) {
-		showNotification("请选择导出路径", "warning");
+		ElMessage.warning("请选择导出路径");
 		return;
 	}
 
 	try {
 		await processAndExportData(type, exportPath.value);
-		showNotification("导出成功", "success");
+		ElMessage.success("导出成功");
 	} catch (error) {
-		showNotification((error as Error).message, "error");
+		ElMessage.error((error as Error).message);
 	}
 };
 </script>
@@ -39,8 +38,8 @@ const handleExport = async (type: number) => {
 
 		<div class="set-info">
 			<el-radio-group v-model="exportFormat">
-				<el-radio label="JSON">导出JSON</el-radio>
-				<el-radio label="AMF">导出AMF</el-radio>
+				<el-radio :value="'JSON'" label="导出JSON" />
+				<el-radio :value="'AMF'" label="导出AMF" />
 			</el-radio-group>
 
 			<div class="grp-button">

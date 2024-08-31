@@ -10,7 +10,7 @@ export interface XlsItem {
 interface XlsxOptionsState {
 	xlsPath: string;
 	exportPath: string;
-	exportFormat: 'JSON' | 'AMF';
+	exportFormat: string;
 	exportDataType: number;
 	xlsFileList: XlsItem[];
 }
@@ -59,7 +59,7 @@ export const useXlsxStore = defineStore("xlsxOptions", {
 			}
 		},
 
-		setExportFormat(exportFormat: 'JSON' | 'AMF') {
+		setExportFormat(exportFormat: string) {
 			this.exportFormat = exportFormat;
 			useLocalStorage("exportFormat").set(exportFormat);
 		},

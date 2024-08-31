@@ -113,7 +113,7 @@ export const xlsRead = async (type: number): Promise<ParsedData | null> => {
   const files = store.xlsFileList;
   const selectedXls = type === 0 ? files.filter(file => file.isSelected) : files;
 
-  logStore.add({ mssage: '正在读取数据', type: 'info' });
+  logStore.add({ mssage: '正在读取数据...', type: 'info' });
   const excelDataList = await Promise.all(
     selectedXls.map(xls => window.electronAPI.invoke("read-excel", `${store.xlsPath}/${xls.name}`))
   );
@@ -138,7 +138,7 @@ export const processAndExportData = async (type: number, exportPath: string): Pr
       try {
         const filePath = await window.electronAPI.invoke("join-paths", exportPath, fileName);
         await window.electronAPI.invoke("write-file", filePath, JSON.stringify(configData, null, 2));
-        logStore.add({ mssage: `已导出文件：${fileName}`, type: 'success' });
+        logStore.add({ mssage: `已导出文件 ${fileName}`, type: 'success' });
 
       } catch (error) {
         logStore.add({ mssage: (error as Error).message, type: 'error' });
