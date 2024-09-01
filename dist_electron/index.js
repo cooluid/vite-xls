@@ -49,10 +49,9 @@ async function createWindow() {
 }
 function getWindowOptions(isDev) {
     return {
-        width: 800,
-        height: 600,
+        // fullscreen: true,
         resizable: false,
-        fullscreenable: false,
+        fullscreenable: true,
         maximizable: false,
         movable: true,
         webPreferences: {
@@ -144,3 +143,4 @@ electron_1.app.whenReady().then(async () => {
 electron_1.app.on('window-all-closed', () => {
     electron_1.app.quit();
 });
+//# sourceMappingURL=index.js.map

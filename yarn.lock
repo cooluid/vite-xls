@@ -382,6 +382,11 @@
     lodash "^4.17.15"
     tmp-promise "^3.0.2"
 
+"@msgpack/msgpack@^3.0.0-beta2":
+  version "3.0.0-beta2"
+  resolved "https://registry.npmmirror.com/@msgpack/msgpack/-/msgpack-3.0.0-beta2.tgz#5bccee30f84df220b33905e3d8249ba96deca0b7"
+  integrity sha512-y+l1PNV0XDyY8sM3YtuMLK5vE3/hkfId+Do8pLo/OPxfxuFAUwcGz3oiiUuV46/aBpwTzZ+mRWVMtlSKbradhw==
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.npmmirror.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
@@ -570,18 +575,23 @@
   integrity sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==
 
 "@types/node@*":
-  version "22.5.1"
-  resolved "https://registry.npmmirror.com/@types/node/-/node-22.5.1.tgz#de01dce265f6b99ed32b295962045d10b5b99560"
-  integrity sha512-KkHsxej0j9IW1KKOOAA/XBA0z08UFSrRQHErzEfA3Vgq57eXIMYboIlHJuYIfd+lwCQjtKqUu3UnmKbtUc9yRw==
+  version "22.5.2"
+  resolved "https://registry.npmmirror.com/@types/node/-/node-22.5.2.tgz#e42344429702e69e28c839a7e16a8262a8086793"
+  integrity sha512-acJsPTEqYqulZS/Yp/S3GgeE6GZ0qYODUR8aVr/DkhHQ8l9nd4j5x1/ZJy9/gHrRlFMqkO6i0I3E27Alu4jjPg==
   dependencies:
     undici-types "~6.19.2"
 
 "@types/node@^20.9.0":
-  version "20.16.2"
-  resolved "https://registry.npmmirror.com/@types/node/-/node-20.16.2.tgz#9e388f503a5af306e8c63319334887390966a11e"
-  integrity sha512-91s/n4qUPV/wg8eE9KHYW1kouTfDk2FPGjXbBMfRWP/2vg1rCXNQL1OCabwGs0XSdukuK+MwCDXE30QpSeMUhQ==
+  version "20.16.3"
+  resolved "https://registry.npmmirror.com/@types/node/-/node-20.16.3.tgz#7b4f9a37091cf03a0c2561bf76a9a55f03f4f523"
+  integrity sha512-/wdGiWRkMOm53gAsSyFMXFZHbVg7C6CbkrzHNpaHoYfsUWPg7m6ZRKtvQjgvQ9i8WT540a3ydRlRQbxjY30XxQ==
   dependencies:
     undici-types "~6.19.2"
+
+"@types/pako@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.npmmirror.com/@types/pako/-/pako-2.0.3.tgz#b6993334f3af27c158f3fe0dfeeba987c578afb1"
+  integrity sha512-bq0hMV9opAcrmE0Byyo0fY3Ew4tgOevJmQ9grUhpXQhYfyLJ1Kqg3P33JT5fdbT2AjeAjR51zqqVjAL/HMkx7Q==
 
 "@types/plist@^3.0.1":
   version "3.0.5"
@@ -701,10 +711,10 @@
   resolved "https://registry.npmmirror.com/@vue/devtools-api/-/devtools-api-6.6.3.tgz#b23a588154cba8986bba82b6e1d0248bde3fd1a0"
   integrity sha512-0MiMsFma/HqA6g3KLKn+AGpL1kgKhFWszC9U29NfpWK5LE7bjeXxySWJrOJ77hBz+TBrBQ7o4QJqbPbqbs8rJw==
 
-"@vue/language-core@2.1.2":
-  version "2.1.2"
-  resolved "https://registry.npmmirror.com/@vue/language-core/-/language-core-2.1.2.tgz#98e7864ab4a928293a88ebf7b427d773e1a40e2e"
-  integrity sha512-tt2J7C+l0J/T5PaLhJ0jvCCi0JNwu3e8azWTYxW3jmAW5B/dac0g5UxmI7l59CQgCGFotqUqI3tXjfZgoWNtog==
+"@vue/language-core@2.1.4":
+  version "2.1.4"
+  resolved "https://registry.npmmirror.com/@vue/language-core/-/language-core-2.1.4.tgz#7be59322a87abbcd9aa23f45fbdfaa1f77bb6e22"
+  integrity sha512-i8pfAgNjTNjabBX1xRsuV6aRw2E8bdQXwd5H8m3cUkTVJju3QN5nfdoXET0uK+yXsuloNJPzo6PXFujRRPNmMA==
   dependencies:
     "@volar/language-core" "~2.4.1"
     "@vue/compiler-dom" "^3.4.0"
@@ -954,9 +964,9 @@ available-typed-arrays@^1.0.7:
     possible-typed-array-names "^1.0.0"
 
 axios@^1.7.4:
-  version "1.7.6"
-  resolved "https://registry.npmmirror.com/axios/-/axios-1.7.6.tgz#34f338182f6802fd3824a6511d6ddf99dd5ae0b5"
-  integrity sha512-Ekur6XDwhnJ5RgOCaxFnXyqlPALI3rVeukZMwOdfghW7/wGz784BYKiQq+QD8NPcr91KRo30KfHOchyijwWw7g==
+  version "1.7.7"
+  resolved "https://registry.npmmirror.com/axios/-/axios-1.7.7.tgz#2f554296f9892a72ac8d8e4c5b79c14a91d0a47f"
+  integrity sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -2706,6 +2716,11 @@ package-json-from-dist@^1.0.0:
   resolved "https://registry.npmmirror.com/package-json-from-dist/-/package-json-from-dist-1.0.0.tgz#e501cd3094b278495eb4258d4c9f6d5ac3019f00"
   integrity sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==
 
+pako@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmmirror.com/pako/-/pako-2.1.0.tgz#266cc37f98c7d883545d11335c00fbd4062c9a86"
+  integrity sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==
+
 parse-author@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/parse-author/-/parse-author-2.0.0.tgz#d3460bf1ddd0dfaeed42da754242e65fb684a81f"
@@ -2846,9 +2861,9 @@ possible-typed-array-names@^1.0.0:
   integrity sha512-d7Uw+eZoloe0EHDIYoe+bQ5WXnGMOpmiZFTuMWCwpjzzkL2nTjcKiAk4hh8TjnGye2TwWOk3UXucZ+3rbmBa8Q==
 
 postcss@^8.4.40, postcss@^8.4.41:
-  version "8.4.41"
-  resolved "https://registry.npmmirror.com/postcss/-/postcss-8.4.41.tgz#d6104d3ba272d882fe18fc07d15dc2da62fa2681"
-  integrity sha512-TesUflQ0WKZqAvg52PWL6kHgLKP6xB6heTOdoYM0Wt2UHyxNa4K25EZZMgKns3BH1RLVbZCREPpLY0rhnNoHVQ==
+  version "8.4.42"
+  resolved "https://registry.npmmirror.com/postcss/-/postcss-8.4.42.tgz#0954e9b075f961fb2790d6b807b1f24e7334dbea"
+  integrity sha512-hywKUQB9Ra4dR1mGhldy5Aj1X3MWDSIA1cEi+Uy0CjheLvP6Ual5RlwMCh8i/X121yEDLDIKBsrCQ8ba3FDMfQ==
   dependencies:
     nanoid "^3.3.7"
     picocolors "^1.0.1"
@@ -3566,12 +3581,12 @@ vue-demi@*, vue-demi@^0.14.10:
   integrity sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==
 
 vue-tsc@^2.0.29:
-  version "2.1.2"
-  resolved "https://registry.npmmirror.com/vue-tsc/-/vue-tsc-2.1.2.tgz#93e3bc5133766fcd4bc3e5cb8b998ea9b159038b"
-  integrity sha512-PH1BDxWT3eaPhl73elyZj6DV0nR3K4IFoUM1sGzMXXQneovVUwHQytdSyAHiED5MtEINGSHpL/Hs9ch+c/tDTw==
+  version "2.1.4"
+  resolved "https://registry.npmmirror.com/vue-tsc/-/vue-tsc-2.1.4.tgz#c9e8e4329c828f2f944068ba758d47abbdd47c23"
+  integrity sha512-XTzMXQcsixAvNbpou/9qngEsZawaiJRZH3Ja+lfgRfv2A1TJv9vnZ/Kyv7XxPqv/TaZVFSnjGpM87VbWIg6yQg==
   dependencies:
     "@volar/typescript" "~2.4.1"
-    "@vue/language-core" "2.1.2"
+    "@vue/language-core" "2.1.4"
     semver "^7.5.4"
 
 vue@^3.4.38:

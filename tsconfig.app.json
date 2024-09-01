@@ -30,7 +30,8 @@
 		"noFallthroughCasesInSwitch": true, // 防止switch语句中的贯穿情况
 		"paths": {
 			"@/*": ["src/*"] // 路径别名，@指向src目录
-		}
+		},
+		"sourceMap": true,
 	},
 	"include": [
 		"src/**/*.ts", // 包含所有TypeScript文件

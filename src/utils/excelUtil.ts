@@ -2,6 +2,8 @@ import { useLogStore } from "@/stores/logStore";
 import * as xlsx from "xlsx";
 import { WorkBook, WorkSheet } from "xlsx";
 import { useXlsxStore } from "../stores/xlsxStore";
+import { serialize, deserialize, compress, decompress } from "./MessagePackUtil";
+
 // 类型定义
 type ParsedData = Record<string, Record<string, Record<string, any>>>;
 
@@ -77,7 +79,7 @@ const parseComplexWorksheet = (worksheet: WorkSheet, maxRow: number, maxCol: num
 
       if (index === keyCount - 1) {
         currentLevel[key] = createDataObject(headers.slice(keyCount), values);
-        
+
       } else {
         currentLevel[key] ||= {};
         currentLevel = currentLevel[key];
@@ -127,6 +129,26 @@ export const xlsRead = async (type: number): Promise<ParsedData | null> => {
   return parseWorkbook(excelDataList);
 };
 
+function generateLargeJson(size: number): any {
+  const largeJson: any = {};
+  for (let i = 0; i < size; i++) {
+    largeJson[`key${i}`] = {
+      id: i,
+      name: `Item ${i}`,
+      values: Array.from({ length: 100 }, (_, j) => `Value ${j}`),
+      nested: {
+        flag: i % 2 === 0,
+        count: i * 10,
+        items: Array.from({ length: 50 }, (_, k) => ({
+          subId: k,
+          subValue: `SubValue ${k}`
+        }))
+      }
+    };
+  }
+  return largeJson;
+}
+
 export const processAndExportData = async (type: number, exportPath: string): Promise<void> => {
   const data = await xlsRead(type);
 
@@ -134,6 +156,31 @@ export const processAndExportData = async (type: number, exportPath: string): Pr
     addLog('无效的数据格式', 'error');
     throw new Error('无效的数据格式');
   }
+
+  // const largeJson = generateLargeJson(1000);
+
+  console.log(`原始数据：`, data);
+  console.log(`原始数据大小：${JSON.stringify(data).length} 字节`);
+
+  try {
+    const buffer = serialize(data);
+    console.log("序列化后大小:", buffer.length, "字节");
+
+    const compressedBuffer = compress(buffer);
+    console.log("压缩后大小:", compressedBuffer.length, "字节");
+
+    const decompressedBuffer = decompress(compressedBuffer);
+    console.log("解压后大小:", decompressedBuffer.length, "字节");
+
+    const deserialized = deserialize(decompressedBuffer);
+    console.log("反序列化后的数据:", deserialized);
+
+    const compressionRatio = (1 - compressedBuffer.length / JSON.stringify(data).length) * 100;
+    console.log("压缩率:", compressionRatio.toFixed(2) + "%");
+  } catch (error) {
+    console.error("序列化或反序列化过程中出错:", error);
+  }
+
 
   await Promise.all(
     Object.entries(data).map(async ([configName, configData]) => {

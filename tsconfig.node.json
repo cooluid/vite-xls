@@ -14,7 +14,8 @@
 		"noUnusedLocals": true, // 报告未使用的局部变量
 		"noUnusedParameters": true, // 报告未使用的参数
 		"noFallthroughCasesInSwitch": true, // 防止switch语句中的贯穿情况
-		"composite": true // 启用项目引用
+		"composite": true, // 启用项目引用
+		"sourceMap": true,
 	},
 	"include": ["vite.config.ts"] // 包含Vite配置文件
 }

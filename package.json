@@ -19,9 +19,11 @@
 		"prebuild": "yarn clean"
 	},
 	"dependencies": {
+		"@msgpack/msgpack": "^3.0.0-beta2",
 		"animejs": "^3.2.2",
 		"electron-updater": "^6.2.1",
 		"element-plus": "^2.8.0",
+		"pako": "^2.1.0",
 		"pinia": "^2.2.2",
 		"pinyin-pro": "^3.24.2",
 		"vue": "^3.4.38",
@@ -30,6 +32,7 @@
 	"devDependencies": {
 		"@electron/packager": "^18.3.4",
 		"@types/animejs": "^3.1.12",
+		"@types/pako": "^2.0.3",
 		"@types/semver": "^7.5.8",
 		"@vitejs/plugin-vue": "^5.1.2",
 		"cross-env": "^7.0.3",
