@@ -59,7 +59,8 @@ const handleExport = async (type: number) => {
 					</el-button>
 				</template>
 				<template v-else>
-					<el-button class="summit-button" type="primary" @click="handleExport(2)">
+					<el-button class="summit-button" type="primary" @click="handleExport(2)"
+						title="将会压缩路径下的所有JSON数据，并序列化，导出后需要解压后才能使用">
 						开始压缩
 					</el-button>
 				</template>
