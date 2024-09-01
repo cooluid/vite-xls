@@ -149,6 +149,38 @@ function generateLargeJson(size: number): any {
   return largeJson;
 }
 
+export const compressData = async () => {
+  //记录用时
+  const startTime = Date.now();
+  const store = useXlsxStore();
+  const path = store.exportPath;
+  const outputFileName = "config.data";
+  const outputFilePath = path + "/" + outputFileName;
+
+  try {
+    //找到路径下面的所有JSON文件
+    addLog(`正在读取数据...`, 'info');
+    const combinedData: { [key: string]: any } = await window.electronAPI.invoke("get-json-map-in-directory", path);
+    addLog(`原始数据大小：${(JSON.stringify(combinedData).length / 1024).toFixed(2)} kb`, 'info');
+    addLog(`正在序列化数据...`, 'info');
+    const serializedData = serialize(combinedData);
+    addLog(`序列化后大小：${(serializedData.length / 1024).toFixed(2)} kb`, 'info');
+    addLog(`正在压缩数据...`, 'info');
+    const compressedData = compress(serializedData);
+    addLog(`压缩后大小：${(compressedData.length / 1024).toFixed(2)} kb`, 'info');
+
+    await window.electronAPI.invoke("write-file", outputFilePath, compressedData);
+    addLog(`压缩率：${((1 - compressedData.length / JSON.stringify(combinedData).length) * 100).toFixed(2)}%`, 'info');
+    const endTime = Date.now();
+    const duration = (endTime - startTime) / 1000;
+    addLog(`压缩用时：${duration} 秒`, 'info');
+    addLog(`已导出文件：${outputFileName}`, 'success', outputFilePath);
+
+  } catch (error) {
+    addLog((error as Error).message, 'error');
+  }
+}
+
 export const processAndExportData = async (type: number, exportPath: string): Promise<void> => {
   const data = await xlsRead(type);
 
@@ -159,27 +191,27 @@ export const processAndExportData = async (type: number, exportPath: string): Pr
 
   // const largeJson = generateLargeJson(1000);
 
-  console.log(`原始数据：`, data);
-  console.log(`原始数据大小：${JSON.stringify(data).length} 字节`);
+  // console.log(`原始数据：`, data);
+  // console.log(`原始数据大小：${JSON.stringify(data).length} 字节`);
 
-  try {
-    const buffer = serialize(data);
-    console.log("序列化后大小:", buffer.length, "字节");
+  // try {
+  //   const buffer = serialize(data);
+  //   console.log("序列化后大小:", buffer.length, "字节");
 
-    const compressedBuffer = compress(buffer);
-    console.log("压缩后大小:", compressedBuffer.length, "字节");
+  //   const compressedBuffer = compress(buffer);
+  //   console.log("压缩后大小:", compressedBuffer.length, "字节");
 
-    const decompressedBuffer = decompress(compressedBuffer);
-    console.log("解压后大小:", decompressedBuffer.length, "字节");
+  //   const decompressedBuffer = decompress(compressedBuffer);
+  //   console.log("解压后大小:", decompressedBuffer.length, "字节");
 
-    const deserialized = deserialize(decompressedBuffer);
-    console.log("反序列化后的数据:", deserialized);
+  //   const deserialized = deserialize(decompressedBuffer);
+  //   console.log("反序列化后的数据:", deserialized);
 
-    const compressionRatio = (1 - compressedBuffer.length / JSON.stringify(data).length) * 100;
-    console.log("压缩率:", compressionRatio.toFixed(2) + "%");
-  } catch (error) {
-    console.error("序列化或反序列化过程中出错:", error);
-  }
+  //   const compressionRatio = (1 - compressedBuffer.length / JSON.stringify(data).length) * 100;
+  //   console.log("压缩率:", compressionRatio.toFixed(2) + "%");
+  // } catch (error) {
+  //   console.error("序列化或反序列化过程中出错:", error);
+  // }
 
 
   await Promise.all(

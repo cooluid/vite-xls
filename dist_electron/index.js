@@ -115,6 +115,26 @@ function setupIpcHandlers(win) {
             throw error;
         }
     });
+    electron_1.ipcMain.handle('get-json-map-in-directory', async (event, dirPath) => {
+        try {
+            const files = await fs.readdir(dirPath);
+            const combinedData = {};
+            for (const file of files) {
+                if (path_1.default.extname(file) === '.json') {
+                    const filePath = path_1.default.join(dirPath, file);
+                    const fileContent = await fs.readFile(filePath, 'utf-8');
+                    const jsonData = JSON.parse(fileContent);
+                    const fileName = path_1.default.basename(file, '.json');
+                    combinedData[fileName] = jsonData;
+                }
+            }
+            return combinedData;
+        }
+        catch (error) {
+            console.error('读取目录JSON失败:', error);
+            throw error;
+        }
+    });
     electron_1.ipcMain.handle('show-item-in-folder', async (event, filePath) => {
         if (filePath) {
             await electron_2.shell.showItemInFolder(path_1.default.normalize(filePath));
@@ -123,9 +143,23 @@ function setupIpcHandlers(win) {
     electron_1.ipcMain.handle('join-paths', (event, ...paths) => {
         return path_1.default.join(...paths);
     });
-    electron_1.ipcMain.handle('write-file', async (event, filePath, content) => {
+    electron_1.ipcMain.handle('write-file', async (event, filePath, content, format) => {
         try {
-            await fs.writeFile(filePath, content);
+            if (content instanceof Uint8Array) {
+                await fs.writeFile(filePath, Buffer.from(content));
+            }
+            else if (typeof content === 'string') {
+                if (format) {
+                    await fs.writeFile(filePath, content, { encoding: format });
+                }
+                else {
+                    await fs.writeFile(filePath, content);
+                }
+            }
+            else {
+                throw new Error('Unsupported content type');
+            }
+            return true;
         }
         catch (error) {
             console.error('写入文件失败:', error);

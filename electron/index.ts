@@ -94,6 +94,28 @@ function setupIpcHandlers(win: BrowserWindow) {
 		}
 	});
 
+	ipcMain.handle('get-json-map-in-directory', async (event, dirPath) => {
+		try {
+			const files = await fs.readdir(dirPath);
+			const combinedData: { [key: string]: any } = {};
+
+			for (const file of files) {
+				if (path.extname(file) === '.json') {
+					const filePath = path.join(dirPath, file);
+					const fileContent = await fs.readFile(filePath, 'utf-8');
+					const jsonData = JSON.parse(fileContent);
+					const fileName = path.basename(file, '.json');
+					combinedData[fileName] = jsonData;
+				}
+			}
+			return combinedData;
+
+		} catch (error) {
+			console.error('读取目录JSON失败:', error);
+			throw error;
+		}
+	});
+
 	ipcMain.handle('show-item-in-folder', async (event, filePath) => {
 		if (filePath) {
 			await shell.showItemInFolder(path.normalize(filePath));
@@ -104,9 +126,24 @@ function setupIpcHandlers(win: BrowserWindow) {
 		return path.join(...paths);
 	});
 
-	ipcMain.handle('write-file', async (event, filePath, content) => {
+	ipcMain.handle('write-file', async (event, filePath: string, content: string | Uint8Array, format?: string) => {
 		try {
-			await fs.writeFile(filePath, content);
+			if (content instanceof Uint8Array) {
+				await fs.writeFile(filePath, Buffer.from(content));
+
+			} else if (typeof content === 'string') {
+				if (format) {
+					await fs.writeFile(filePath, content, { encoding: format as BufferEncoding });
+				} else {
+					await fs.writeFile(filePath, content);
+				}
+
+			} else {
+				throw new Error('Unsupported content type');
+			}
+			
+			return true;
+
 		} catch (error) {
 			console.error('写入文件失败:', error);
 			throw error;
