@@ -86,6 +86,7 @@ const handleExport = async (type: number) => {
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+	padding-bottom: 5px;
 }
 
 .grp-button {
