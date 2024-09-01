@@ -160,8 +160,8 @@ export const compressData = async () => {
   try {
     //找到路径下面的所有JSON文件
     addLog(`正在读取数据...`, 'info');
-    // const combinedData: { [key: string]: any } = await window.electronAPI.invoke("get-json-map-in-directory", path);
-    const combinedData = generateLargeJson(50000);
+    const combinedData: { [key: string]: any } = await window.electronAPI.invoke("get-json-map-in-directory", path);
+    // const combinedData = generateLargeJson(50000);
     //如果数据为空，则不进行压缩
     if (Object.keys(combinedData).length === 0) {
       addLog(`没有找到任何JSON数据，请先导出JSON数据`, 'error');
