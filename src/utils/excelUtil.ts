@@ -160,7 +160,14 @@ export const compressData = async () => {
   try {
     //找到路径下面的所有JSON文件
     addLog(`正在读取数据...`, 'info');
-    const combinedData: { [key: string]: any } = await window.electronAPI.invoke("get-json-map-in-directory", path);
+    // const combinedData: { [key: string]: any } = await window.electronAPI.invoke("get-json-map-in-directory", path);
+    const combinedData = generateLargeJson(50000);
+    //如果数据为空，则不进行压缩
+    if (Object.keys(combinedData).length === 0) {
+      addLog(`没有找到任何JSON数据，请先导出JSON数据`, 'error');
+      return;
+    }
+
     addLog(`原始数据大小：${(JSON.stringify(combinedData).length / 1024).toFixed(2)} kb`, 'info');
     addLog(`正在序列化数据...`, 'info');
     const serializedData = serialize(combinedData);
@@ -168,12 +175,14 @@ export const compressData = async () => {
     addLog(`正在压缩数据...`, 'info');
     const compressedData = compress(serializedData);
     addLog(`压缩后大小：${(compressedData.length / 1024).toFixed(2)} kb`, 'info');
+    addLog(`正在写入文件...`, 'info');
 
     await window.electronAPI.invoke("write-file", outputFilePath, compressedData);
+
     addLog(`压缩率：${((1 - compressedData.length / JSON.stringify(combinedData).length) * 100).toFixed(2)}%`, 'info');
     const endTime = Date.now();
     const duration = (endTime - startTime) / 1000;
-    addLog(`压缩用时：${duration} 秒`, 'info');
+    addLog(`执行用时：${duration} 秒`, 'info');
     addLog(`已导出文件：${outputFileName}`, 'success', outputFilePath);
 
   } catch (error) {
