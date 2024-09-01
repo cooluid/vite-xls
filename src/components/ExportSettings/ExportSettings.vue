@@ -61,16 +61,10 @@ const handleExport = async (type: number) => {
 	flex-direction: column;
 }
 
-.switch {
-	display: flex;
-	gap: 20px;
-}
-
 .set-info {
-	padding-top: 10px;
+	margin-top: 10px;
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
 }
 
 .el-radio-group {

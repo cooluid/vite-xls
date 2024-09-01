@@ -21,7 +21,7 @@ const isSelected = computed({
 
 <template>
 	<div :class="[{ selected: modelValue.isSelected }, 'list-item']">
-		<el-checkbox v-model="isSelected" class="full-width">
+		<el-checkbox v-model="isSelected">
 			<slot></slot>
 		</el-checkbox>
 	</div>
@@ -30,16 +30,10 @@ const isSelected = computed({
 <style scoped>
 .list-item {
 	margin-right: 10px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	font-size: 14px;
-	text-align: left;
 	border-bottom: 1px dashed var(--el-border-color-lighter);
-	cursor: pointer;
 }
 
-.full-width {
+.el-checkbox {
 	width: 100%;
 }
 </style>

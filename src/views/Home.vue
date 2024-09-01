@@ -2,14 +2,14 @@
 	<MainLayout>
 		<div class="container">
 			<el-row>
-				<el-col :span="12" class="left-col">
+				<el-col :span="12" class="l-col">
 					<div class="file-select-container">
 						<FileSelect v-model="importPath" :type="0" />
 					</div>
 					<FileList v-model="files" />
 				</el-col>
 				<el-col :span="12" class="r-col">
-					<div class="list-container">
+					<div class="log-container">
 						<LogView :list="logList" />
 					</div>
 					<div class="export-settings-container">
@@ -62,27 +62,42 @@ watch(importPath, async () => {
 
 .el-row {
 	padding: 10px;
+	width: 100%;
 	height: 100%;
 	background-color: var(--el-bg-color);
+	gap: 10px;
 }
 
+.l-col,
 .r-col {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	flex: 1;
 }
 
-.list-container {
+.l-col {
+	border: 1px solid var(--el-border-color-lighter);
+	border-radius: 3px;
+	background-color: var(--el-bg-color-overlay);
+}
+
+.r-col {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.log-container {
 	position: relative;
 	flex: 1;
 	overflow-y: auto;
-	min-height: 0;
 	padding: 10px;
-	border: 1px solid var(--el-border-color-lighter);
-	border-radius: 10px;
+	border-radius: 3px;
+	background-color: var(--el-border-color-light);
 }
 
 .export-settings-container {
-	min-height: 40px;
+	flex: 0 0 auto;
 }
 </style>

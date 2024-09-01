@@ -38,7 +38,7 @@ const getFirstLetter = (str: string) => pinyin(str, { pattern: 'first', toneType
 		<FileItem v-for="(item, index) in xlsFileItemList" :key="index" :modelValue="item"
 			@update:modelValue="(changedItem: XlsItem) => updateXlsFileItemList(changedItem)">
 			<span class="first-letter">{{ item.firstLetter }}-</span>
-			{{ item.name }}
+			<span class="file-name">{{ item.name }}</span>
 		</FileItem>
 	</div>
 </template>
@@ -52,8 +52,11 @@ const getFirstLetter = (str: string) => pinyin(str, { pattern: 'first', toneType
 }
 
 .first-letter {
-	text-align: center;
+	font-size: 12px;
 	font-weight: bold;
-	color: var(--el-text-color-primary);
+}
+
+.file-name {
+	font-size: 12px;
 }
 </style>
