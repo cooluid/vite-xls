@@ -5,6 +5,7 @@ import path from 'path';
 import * as xlsx from 'xlsx';
 import { shell } from 'electron';
 
+
 async function createWindow() {
 	const isDev = process.env.IS_DEV === "true";
 	console.log("isDEV", isDev);
@@ -65,12 +66,32 @@ function setupIpcHandlers(win: BrowserWindow) {
 		return result.filePaths;
 	});
 
-	ipcMain.handle("read-file", async (event, filePath) => {
+	ipcMain.handle("read-files", async (event, dirPath: string, suffix = ".json") => {
 		try {
-			return await fs.readFile(filePath, 'utf8');
-		} catch (err) {
-			console.error(err);
-			throw err;
+			const files = await fs.readdir(dirPath);
+			const combinedData: { [key: string]: any } = {};
+
+			for (const file of files) {
+				if (path.extname(file) !== suffix) {
+					continue;
+				}
+
+				const filePath = path.join(dirPath, file);
+				const fileContent = await fs.readFile(filePath, 'utf8');
+				
+				try {
+					combinedData[file] = JSON.parse(fileContent);
+				} catch (parseError) {
+					console.error(`解析文件 ${file} 失败:`, parseError);
+					combinedData[file] = null; // 或者您可以选择跳过这个文件
+				}
+			}
+
+			return combinedData;
+
+		} catch (error) {
+			console.error('读取文件失败:', error);
+			throw error;
 		}
 	});
 
@@ -90,28 +111,6 @@ function setupIpcHandlers(win: BrowserWindow) {
 
 		} catch (error) {
 			console.error('读取目录失败:', error);
-			throw error;
-		}
-	});
-
-	ipcMain.handle('get-json-map-in-directory', async (event, dirPath) => {
-		try {
-			const files = await fs.readdir(dirPath);
-			const combinedData: { [key: string]: any } = {};
-
-			for (const file of files) {
-				if (path.extname(file) === '.json') {
-					const filePath = path.join(dirPath, file);
-					const fileContent = await fs.readFile(filePath, 'utf-8');
-					const jsonData = JSON.parse(fileContent);
-					const fileName = path.basename(file, '.json');
-					combinedData[fileName] = jsonData;
-				}
-			}
-			return combinedData;
-
-		} catch (error) {
-			console.error('读取目录JSON失败:', error);
 			throw error;
 		}
 	});
@@ -141,7 +140,7 @@ function setupIpcHandlers(win: BrowserWindow) {
 			} else {
 				throw new Error('Unsupported content type');
 			}
-			
+
 			return true;
 
 		} catch (error) {

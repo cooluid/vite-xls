@@ -87,13 +87,29 @@ function setupIpcHandlers(win) {
         const result = await electron_1.dialog.showOpenDialog(win, { properties: ['openFile'] });
         return result.filePaths;
     });
-    electron_1.ipcMain.handle("read-file", async (event, filePath) => {
+    electron_1.ipcMain.handle("read-files", async (event, dirPath, suffix = ".json") => {
         try {
-            return await fs.readFile(filePath, 'utf8');
+            const files = await fs.readdir(dirPath);
+            const combinedData = {};
+            for (const file of files) {
+                if (path_1.default.extname(file) !== suffix) {
+                    continue;
+                }
+                const filePath = path_1.default.join(dirPath, file);
+                const fileContent = await fs.readFile(filePath, 'utf8');
+                try {
+                    combinedData[file] = JSON.parse(fileContent);
+                }
+                catch (parseError) {
+                    console.error(`解析文件 ${file} 失败:`, parseError);
+                    combinedData[file] = null; // 或者您可以选择跳过这个文件
+                }
+            }
+            return combinedData;
         }
-        catch (err) {
-            console.error(err);
-            throw err;
+        catch (error) {
+            console.error('读取文件失败:', error);
+            throw error;
         }
     });
     electron_1.ipcMain.handle("read-excel", async (event, filePath) => {
@@ -112,26 +128,6 @@ function setupIpcHandlers(win) {
         }
         catch (error) {
             console.error('读取目录失败:', error);
-            throw error;
-        }
-    });
-    electron_1.ipcMain.handle('get-json-map-in-directory', async (event, dirPath) => {
-        try {
-            const files = await fs.readdir(dirPath);
-            const combinedData = {};
-            for (const file of files) {
-                if (path_1.default.extname(file) === '.json') {
-                    const filePath = path_1.default.join(dirPath, file);
-                    const fileContent = await fs.readFile(filePath, 'utf-8');
-                    const jsonData = JSON.parse(fileContent);
-                    const fileName = path_1.default.basename(file, '.json');
-                    combinedData[fileName] = jsonData;
-                }
-            }
-            return combinedData;
-        }
-        catch (error) {
-            console.error('读取目录JSON失败:', error);
             throw error;
         }
     });
