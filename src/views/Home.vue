@@ -93,8 +93,9 @@ watch(importPath, async () => {
 	flex: 1;
 	overflow-y: auto;
 	padding: 10px;
+	border: 1px solid var(--el-border-color-lighter);
 	border-radius: 3px;
-	background-color: var(--el-border-color-light);
+	background-color: var(--el-bg-color-overlay);
 }
 
 .export-settings-container {
