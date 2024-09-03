@@ -12,7 +12,7 @@
 		"build:electron": "tsc -b tsconfig.electron.json",
 		"build": "run-s clean build:vite build:electron",
 		"start": "electron .",
-		"start:debug": "cross-env VSCODE_DEBUG=true electron --remote-debugging-port=9223 .",
+		"start:debug": "cross-env VSCODE_DEBUG=true electron --remote-debugging-port=9222 .",
 		"postinstall": "electron-builder install-app-deps",
 		"pack:mac": "run-s build && electron-builder --mac",
 		"pack:win": "run-s build && electron-builder --win",
