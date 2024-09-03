@@ -55,7 +55,6 @@ function getWindowOptions(isDev) {
         maximizable: false,
         movable: true,
         webPreferences: {
-            devTools: isDev,
             contextIsolation: true,
             nodeIntegration: false,
             allowRunningInsecureContent: isDev,
@@ -66,7 +65,7 @@ function getWindowOptions(isDev) {
 async function loadDevServer(win, retryCount = 0) {
     try {
         await win.loadURL("http://localhost:5173");
-        win.webContents.openDevTools();
+        // win.webContents.openDevTools();
     }
     catch (error) {
         console.error(`加载开发服务器失败，尝试重试 (${retryCount + 1}/5)`);

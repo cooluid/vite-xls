@@ -3,7 +3,9 @@
   "compounds": [
     {
       "name": "调试 Electron 应用",
-      "configurations": ["调试主进程", "调试渲染进程"],
+      "configurations": [
+        "调试主进程",
+      ],
       "stopAll": true
     }
   ],
@@ -17,17 +19,12 @@
       "windows": {
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
       },
-      "args": [".", "--remote-debugging-port=9222"],
+      "args": [
+        ".",
+        "--remote-debugging-port=9222"
+      ],
       "outputCapture": "std",
       "console": "integratedTerminal"
-    },
-    {
-      "name": "调试渲染进程",
-      "type": "msedge",
-      "request": "attach",
-      "port": 9222,
-      "webRoot": "${workspaceFolder}/dist",
-      "timeout": 30000
     }
   ]
 }

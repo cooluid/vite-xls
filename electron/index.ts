@@ -32,7 +32,6 @@ function getWindowOptions(isDev: boolean): Electron.BrowserWindowConstructorOpti
 		maximizable: false,
 		movable: true,
 		webPreferences: {
-			devTools: isDev,
 			contextIsolation: true,
 			nodeIntegration: false,
 			allowRunningInsecureContent: isDev,
@@ -44,7 +43,7 @@ function getWindowOptions(isDev: boolean): Electron.BrowserWindowConstructorOpti
 async function loadDevServer(win: BrowserWindow, retryCount = 0) {
 	try {
 		await win.loadURL("http://localhost:5173");
-		win.webContents.openDevTools();
+		// win.webContents.openDevTools();
 	} catch (error) {
 		console.error(`加载开发服务器失败，尝试重试 (${retryCount + 1}/5)`);
 		if (retryCount < 4) {
