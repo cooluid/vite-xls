@@ -191,37 +191,13 @@ export const compressData = async () => {
 }
 
 export const processAndExportData = async (type: number, exportPath: string): Promise<void> => {
+  const startTime = Date.now();
   const data = await xlsRead(type);
 
   if (!data) {
     addLog('无效的数据格式', 'error');
     throw new Error('无效的数据格式');
   }
-
-  // const largeJson = generateLargeJson(1000);
-
-  // console.log(`原始数据：`, data);
-  // console.log(`原始数据大小：${JSON.stringify(data).length} 字节`);
-
-  // try {
-  //   const buffer = serialize(data);
-  //   console.log("序列化后大小:", buffer.length, "字节");
-
-  //   const compressedBuffer = compress(buffer);
-  //   console.log("压缩后大小:", compressedBuffer.length, "字节");
-
-  //   const decompressedBuffer = decompress(compressedBuffer);
-  //   console.log("解压后大小:", decompressedBuffer.length, "字节");
-
-  //   const deserialized = deserialize(decompressedBuffer);
-  //   console.log("反序列化后的数据:", deserialized);
-
-  //   const compressionRatio = (1 - compressedBuffer.length / JSON.stringify(data).length) * 100;
-  //   console.log("压缩率:", compressionRatio.toFixed(2) + "%");
-  // } catch (error) {
-  //   console.error("序列化或反序列化过程中出错:", error);
-  // }
-
 
   await Promise.all(
     Object.entries(data).map(async ([configName, configData]) => {
@@ -238,4 +214,7 @@ export const processAndExportData = async (type: number, exportPath: string): Pr
       }
     })
   );
+  const endTime = Date.now();
+  const duration = (endTime - startTime) / 1000;
+  addLog(`执行用时：${duration} 秒`, 'info');
 };
