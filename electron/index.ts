@@ -1,32 +1,36 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as fs from "node:fs/promises";
 import path from 'path';
 import * as xlsx from 'xlsx';
-import { shell } from 'electron';
 
+let mainWindow: BrowserWindow | null = null;
+let devToolsWindow: BrowserWindow | null = null;
 
 async function createWindow() {
 	const isDev = process.env.IS_DEV === "true";
 	console.log("isDEV", isDev);
 
-	if (process.env.VSCODE_DEBUG === "true") {
-		await new Promise(resolve => setTimeout(resolve, 2000));
+	mainWindow = new BrowserWindow(getWindowOptions(isDev));
+	setupIpcHandlers();
+
+	mainWindow.on('closed', () => {
+		removeIpcHandlers();
+		closeDevToolsWindow();
+		mainWindow = null;
+	});
+
+	if (process.env.DEBUG === "true") {
+		createDevToolsWindow();
 	}
 
-	const win = new BrowserWindow(getWindowOptions(isDev));
-	setupIpcHandlers(win);
-
-	if (isDev) {
-		await loadDevServer(win);
-	} else {
-		await win.loadURL(`file://${path.resolve(__dirname, '../')}/dist/index.html`);
-	}
+	await loadAppContent(isDev);
 }
 
 function getWindowOptions(isDev: boolean): Electron.BrowserWindowConstructorOptions {
 	return {
-		// fullscreen: true,
+		width: 800,
+		height: 600,
 		resizable: false,
 		fullscreenable: true,
 		maximizable: false,
@@ -40,124 +44,178 @@ function getWindowOptions(isDev: boolean): Electron.BrowserWindowConstructorOpti
 	};
 }
 
-async function loadDevServer(win: BrowserWindow, retryCount = 0) {
-	try {
-		await win.loadURL("http://localhost:5173");
-		// win.webContents.openDevTools();
-	} catch (error) {
-		console.error(`加载开发服务器失败，尝试重试 (${retryCount + 1}/5)`);
-		if (retryCount < 4) {
-			setTimeout(() => loadDevServer(win, retryCount + 1), 1000);
-		} else {
-			console.error("无法连接到开发服务器，请确保开发服务器已启动");
-		}
+function createDevToolsWindow() {
+	devToolsWindow = new BrowserWindow({
+		width: 1200,
+		height: 1000,
+		show: false,
+	});
+
+	mainWindow!.webContents.setDevToolsWebContents(devToolsWindow.webContents);
+	mainWindow!.webContents.openDevTools({ mode: 'detach' });
+
+	devToolsWindow.setPosition(1000, 100);
+	devToolsWindow.show();
+
+	devToolsWindow.on('closed', () => {
+		devToolsWindow = null;
+	});
+}
+
+function closeDevToolsWindow() {
+	if (devToolsWindow && !devToolsWindow.isDestroyed()) {
+		devToolsWindow.close();
+	}
+	devToolsWindow = null;
+}
+
+async function loadAppContent(isDev: boolean) {
+	if (isDev) {
+		await mainWindow!.loadURL("http://localhost:5173");
+	} else {
+		await mainWindow!.loadURL(`file://${path.resolve(__dirname, '../')}/dist/index.html`);
 	}
 }
 
-function setupIpcHandlers(win: BrowserWindow) {
-	ipcMain.handle("dialog:openDirectory", async () => {
-		const result = await dialog.showOpenDialog(win, { properties: ['openDirectory'] });
-		return result.filePaths;
-	});
-
-	ipcMain.handle("dialog:openFile", async () => {
-		const result = await dialog.showOpenDialog(win, { properties: ['openFile'] });
-		return result.filePaths;
-	});
-
-	ipcMain.handle("read-files", async (event, dirPath: string, suffix = ".json") => {
-		try {
-			const files = await fs.readdir(dirPath);
-			const combinedData: { [key: string]: any } = {};
-
-			for (const file of files) {
-				if (path.extname(file) !== suffix) {
-					continue;
-				}
-
-				const filePath = path.join(dirPath, file);
-				const fileContent = await fs.readFile(filePath, 'utf8');
-				
-				try {
-					combinedData[file] = JSON.parse(fileContent);
-				} catch (parseError) {
-					console.error(`解析文件 ${file} 失败:`, parseError);
-					combinedData[file] = null; // 或者您可以选择跳过这个文件
-				}
-			}
-
-			return combinedData;
-
-		} catch (error) {
-			console.error('读取文件失败:', error);
-			throw error;
-		}
-	});
-
-	ipcMain.handle("read-excel", async (event, filePath) => {
-		try {
-			return xlsx.readFile(filePath);
-		} catch (e) {
-			console.error(e);
-			throw e;
-		}
-	});
-
-	ipcMain.handle('get-files-in-directory', async (event, dirPath) => {
-		try {
-			const files = await fs.readdir(dirPath);
-			return files;
-
-		} catch (error) {
-			console.error('读取目录失败:', error);
-			throw error;
-		}
-	});
-
-	ipcMain.handle('show-item-in-folder', async (event, filePath) => {
-		if (filePath) {
-			await shell.showItemInFolder(path.normalize(filePath));
-		}
-	});
-
-	ipcMain.handle('join-paths', (event, ...paths: string[]) => {
-		return path.join(...paths);
-	});
-
-	ipcMain.handle('write-file', async (event, filePath: string, content: string | Uint8Array, format?: string) => {
-		try {
-			if (content instanceof Uint8Array) {
-				await fs.writeFile(filePath, Buffer.from(content));
-
-			} else if (typeof content === 'string') {
-				if (format) {
-					await fs.writeFile(filePath, content, { encoding: format as BufferEncoding });
-				} else {
-					await fs.writeFile(filePath, content);
-				}
-
-			} else {
-				throw new Error('Unsupported content type');
-			}
-
-			return true;
-
-		} catch (error) {
-			console.error('写入文件失败:', error);
-			throw error;
-		}
-	});
-
-	ipcMain.handle('close-app', () => {
-		app.quit();
-	});
+function setupIpcHandlers() {
+	ipcMain.handle("dialog:openDirectory", handleOpenDirectory);
+	ipcMain.handle("dialog:openFile", handleOpenFile);
+	ipcMain.handle("read-files", handleReadFiles);
+	ipcMain.handle("read-excel", handleReadExcel);
+	ipcMain.handle('get-files-in-directory', handleGetFilesInDirectory);
+	ipcMain.handle('show-item-in-folder', handleShowItemInFolder);
+	ipcMain.handle('join-paths', handleJoinPaths);
+	ipcMain.handle('write-file', handleWriteFile);
+	ipcMain.handle('close-app', handleCloseApp);
 }
 
-app.whenReady().then(async () => {
+function removeIpcHandlers() {
+	ipcMain.removeHandler("dialog:openDirectory");
+	ipcMain.removeHandler("dialog:openFile");
+	ipcMain.removeHandler("read-files");
+	ipcMain.removeHandler("read-excel");
+	ipcMain.removeHandler('get-files-in-directory');
+	ipcMain.removeHandler('show-item-in-folder');
+	ipcMain.removeHandler('join-paths');
+	ipcMain.removeHandler('write-file');
+	ipcMain.removeHandler('close-app');
+}
+
+// 新的处理函数
+function handleOpenDirectory() {
+	return dialog.showOpenDialog(mainWindow!, { properties: ['openDirectory'] }).then(result => result.filePaths);
+}
+
+function handleOpenFile() {
+	return dialog.showOpenDialog(mainWindow!, { properties: ['openFile'] }).then(result => result.filePaths);
+}
+
+function handleShowItemInFolder(event: Electron.IpcMainInvokeEvent, filePath: string) {
+	return filePath && shell.showItemInFolder(path.normalize(filePath));
+}
+
+function handleJoinPaths(event: Electron.IpcMainInvokeEvent, ...paths: string[]) {
+	return path.join(...paths);
+}
+
+function handleCloseApp() {
+	app.quit();
+}
+
+async function handleReadFiles(event: Electron.IpcMainInvokeEvent, dirPath: string, suffix = ".json") {
+	try {
+		const files = await fs.readdir(dirPath);
+		const combinedData: { [key: string]: any } = {};
+
+		for (const file of files) {
+			if (path.extname(file) !== suffix) continue;
+
+			const filePath = path.join(dirPath, file);
+			const fileContent = await fs.readFile(filePath, 'utf8');
+
+			try {
+				combinedData[file] = JSON.parse(fileContent);
+			} catch (parseError) {
+				console.error(`解析文件 ${file} 失败:`, parseError);
+				combinedData[file] = null;
+			}
+		}
+
+		return combinedData;
+	} catch (error) {
+		console.error('读取文件失败:', error);
+		throw error;
+	}
+}
+
+async function handleReadExcel(event: Electron.IpcMainInvokeEvent, filePath: string) {
+	try {
+		return xlsx.readFile(filePath);
+	} catch (e) {
+		console.error(e);
+		throw e;
+	}
+}
+
+async function handleGetFilesInDirectory(event: Electron.IpcMainInvokeEvent, dirPath: string) {
+	try {
+		return await fs.readdir(dirPath);
+	} catch (error) {
+		console.error('读取目录失败:', error);
+		throw error;
+	}
+}
+
+async function handleWriteFile(event: Electron.IpcMainInvokeEvent, filePath: string, content: string | Uint8Array, format?: string) {
+	try {
+		if (content instanceof Uint8Array) {
+			await fs.writeFile(filePath, Buffer.from(content));
+		} else if (typeof content === 'string') {
+			await fs.writeFile(filePath, content, format ? { encoding: format as BufferEncoding } : undefined);
+		} else {
+			throw new Error('Unsupported content type');
+		}
+		return true;
+	} catch (error) {
+		console.error('写入文件失败:', error);
+		throw error;
+	}
+}
+
+function setupAppEventListeners() {
+	app.on('window-all-closed', handleWindowAllClosed);
+	app.on('activate', handleActivate);
+	app.on('before-quit', handleBeforeQuit);
+}
+
+function handleWindowAllClosed() {
+	closeDevToolsWindow();
+	if (process.platform !== 'darwin') {
+		app.quit();
+	}
+}
+
+function handleActivate() {
+	if (BrowserWindow.getAllWindows().length === 0) {
+		createWindow();
+	}
+}
+
+function handleBeforeQuit() {
+	if (mainWindow && !mainWindow.isDestroyed()) {
+		mainWindow.removeAllListeners('closed');
+		mainWindow.close();
+	}
+	mainWindow = null;
+
+	closeDevToolsWindow();
+}
+
+async function initApp() {
+	await app.whenReady();
 	await createWindow();
 	autoUpdater.checkForUpdatesAndNotify();
-});
+	setupAppEventListeners();
+}
 
-app.on('window-all-closed', () => {
-	app.quit();
-})
+initApp().catch(console.error);
