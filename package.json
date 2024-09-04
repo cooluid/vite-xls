@@ -5,18 +5,14 @@
 	"main": "dist_electron/index.js",
 	"scripts": {
 		"clean": "rimraf dist dist_electron release",
+		"dev": "run-p dev:vite dev:electron",
 		"dev:vite": "vite",
 		"dev:electron": "wait-on http://localhost:5173 && cross-env IS_DEV=true electron .",
-		"dev": "run-p dev:vite dev:electron",
+		"build": "run-s clean build:vite build:electron",
 		"build:vite": "vue-tsc -b && vite build",
 		"build:electron": "tsc -b tsconfig.electron.json",
-		"build": "run-s clean build:vite build:electron",
-		"start": "electron .",
-		"start:debug": "cross-env VSCODE_DEBUG=true electron --remote-debugging-port=9222 .",
-		"postinstall": "electron-builder install-app-deps",
-		"pack:mac": "run-s build && electron-builder --mac",
 		"pack:win": "run-s build && electron-builder --win",
-		"prebuild": "yarn clean"
+		"postinstall": "electron-builder install-app-deps"
 	},
 	"dependencies": {
 		"@msgpack/msgpack": "^3.0.0-beta2",
