@@ -43,9 +43,7 @@ async function createWindow() {
         closeDevToolsWindow();
         mainWindow = null;
     });
-    if (process.env.DEBUG === "true") {
-        createDevToolsWindow();
-    }
+    // createDevToolsWindow();
     await loadAppContent(isDev);
 }
 function getWindowOptions(isDev) {
@@ -60,6 +58,7 @@ function getWindowOptions(isDev) {
             contextIsolation: true,
             nodeIntegration: false,
             allowRunningInsecureContent: isDev,
+            webSecurity: true,
             preload: path_1.default.join(__dirname, './preload.js')
         }
     };
@@ -89,7 +88,9 @@ async function loadAppContent(isDev) {
         await mainWindow.loadURL("http://localhost:5173");
     }
     else {
-        await mainWindow.loadURL(`file://${path_1.default.resolve(__dirname, '../')}/dist/index.html`);
+        const htmlPath = path_1.default.resolve(__dirname, '../dist/index.html');
+        console.log('Loading HTML from:', htmlPath);
+        await mainWindow.loadURL(`file://${htmlPath}`);
     }
 }
 function setupIpcHandlers() {
@@ -102,6 +103,8 @@ function setupIpcHandlers() {
     electron_1.ipcMain.handle('join-paths', handleJoinPaths);
     electron_1.ipcMain.handle('write-file', handleWriteFile);
     electron_1.ipcMain.handle('close-app', handleCloseApp);
+    electron_1.ipcMain.handle('get-app-version', handleGetAppVersion);
+    electron_1.ipcMain.handle('read-file', handleReadFile);
 }
 function removeIpcHandlers() {
     electron_1.ipcMain.removeHandler("dialog:openDirectory");
@@ -113,6 +116,8 @@ function removeIpcHandlers() {
     electron_1.ipcMain.removeHandler('join-paths');
     electron_1.ipcMain.removeHandler('write-file');
     electron_1.ipcMain.removeHandler('close-app');
+    electron_1.ipcMain.removeHandler('get-app-version');
+    electron_1.ipcMain.removeHandler('read-file');
 }
 // 新的处理函数
 function handleOpenDirectory() {
@@ -126,6 +131,12 @@ function handleShowItemInFolder(event, filePath) {
 }
 function handleJoinPaths(event, ...paths) {
     return path_1.default.join(...paths);
+}
+function handleGetAppVersion() {
+    return electron_1.app.getVersion();
+}
+function handleReadFile(event, filePath) {
+    return fs.readFile(filePath, 'utf8');
 }
 function handleCloseApp() {
     electron_1.app.quit();

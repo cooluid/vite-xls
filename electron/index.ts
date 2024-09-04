@@ -20,9 +20,7 @@ async function createWindow() {
 		mainWindow = null;
 	});
 
-	if (process.env.DEBUG === "true") {
-		createDevToolsWindow();
-	}
+	// createDevToolsWindow();
 
 	await loadAppContent(isDev);
 }
@@ -39,6 +37,7 @@ function getWindowOptions(isDev: boolean): Electron.BrowserWindowConstructorOpti
 			contextIsolation: true,
 			nodeIntegration: false,
 			allowRunningInsecureContent: isDev,
+			webSecurity: true,
 			preload: path.join(__dirname, './preload.js')
 		}
 	};
@@ -73,7 +72,9 @@ async function loadAppContent(isDev: boolean) {
 	if (isDev) {
 		await mainWindow!.loadURL("http://localhost:5173");
 	} else {
-		await mainWindow!.loadURL(`file://${path.resolve(__dirname, '../')}/dist/index.html`);
+		const htmlPath = path.resolve(__dirname, '../dist/index.html');
+		console.log('Loading HTML from:', htmlPath);
+		await mainWindow!.loadURL(`file://${htmlPath}`);
 	}
 }
 
@@ -87,6 +88,8 @@ function setupIpcHandlers() {
 	ipcMain.handle('join-paths', handleJoinPaths);
 	ipcMain.handle('write-file', handleWriteFile);
 	ipcMain.handle('close-app', handleCloseApp);
+	ipcMain.handle('get-app-version', handleGetAppVersion);
+	ipcMain.handle('read-file', handleReadFile);
 }
 
 function removeIpcHandlers() {
@@ -99,6 +102,8 @@ function removeIpcHandlers() {
 	ipcMain.removeHandler('join-paths');
 	ipcMain.removeHandler('write-file');
 	ipcMain.removeHandler('close-app');
+	ipcMain.removeHandler('get-app-version');
+	ipcMain.removeHandler('read-file');
 }
 
 // 新的处理函数
@@ -116,6 +121,14 @@ function handleShowItemInFolder(event: Electron.IpcMainInvokeEvent, filePath: st
 
 function handleJoinPaths(event: Electron.IpcMainInvokeEvent, ...paths: string[]) {
 	return path.join(...paths);
+}
+
+function handleGetAppVersion() {
+	return app.getVersion();
+}
+
+function handleReadFile(event: Electron.IpcMainInvokeEvent, filePath: string) {
+	return fs.readFile(filePath, 'utf8');
 }
 
 function handleCloseApp() {

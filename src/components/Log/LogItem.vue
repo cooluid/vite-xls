@@ -1,8 +1,8 @@
 <template>
     <div class="log-item">
-        <div :class="['log-item-header', `log-item-header-${logItem.type}`, 'log-item-info']">
+        <div :class="[`log-item-header-${logItem.type}`, 'log-item-info']">
             <span>{{ logItem.time }}：</span>
-            <span :class="{ 'log-item-message-success': logItem.type === 'success' }" @click="handleClick">{{
+            <span :class="{ 'message-success': logItem.type === 'success' }" @click="handleClick">{{
                 logItem.message }}</span>
         </div>
     </div>
@@ -27,7 +27,7 @@ const handleClick = () => {
     color: forestgreen;
 }
 
-.log-item-message-success {
+.message-success {
     text-decoration: underline;
     cursor: pointer;
 }
@@ -40,7 +40,11 @@ const handleClick = () => {
     color: #f40808;
 }
 
-.log-item-header:hover {
+.log-item-header-info {
+    color: var(--el-text-color-primary);
+}
+
+.log-item-info:hover {
     background-color: #dce3af;
 }
 
