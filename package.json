@@ -11,7 +11,7 @@
 		"build": "run-s clean build:vite build:electron",
 		"build:vite": "vue-tsc -b && vite build",
 		"build:electron": "tsc -b tsconfig.electron.json",
-		"pack:win": "run-s build && electron-builder --win",
+		"pack:mac": "run-s build && electron-builder --mac",
 		"postinstall": "electron-builder install-app-deps"
 	},
 	"dependencies": {
